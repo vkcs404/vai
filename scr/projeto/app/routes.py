@@ -31,3 +31,4 @@ def scaner():
 @main_bp.route('/relatorio')
 def relatorio():
     return render_template('relatorio.html')
+
