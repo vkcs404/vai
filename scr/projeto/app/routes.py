@@ -1,5 +1,5 @@
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for
 
 main_bp = Blueprint('main', __name__)
 
@@ -32,3 +32,12 @@ def scaner():
 def relatorio():
     return render_template('relatorio.html')
 
+# CRUDE
+
+# Rota do cliente novo
+@main_bp.route('/cliente_novo', methods=['POST'])
+def cliente_novo():
+    nome = request.form.get('cliente_nome')
+    email = request.form.get('cliente_email')
+    telefone = request.form.get('cliente_telefone')
+    senha = request.form.get('cliente_senha')
