@@ -42,6 +42,25 @@ def cliente_novo():
     telefone = request.form.get('cliente_telefone')
     senha = request.form.get('cliente_senha')
 
+# Rota para editar cliente
+@main_bp.route('/cliente_editar', methods=['POST'])
+def cliente_editar():
+    client_id = request.form.get('client.id')
+    nome = request.form.get('cliente_nome')
+    email = request.form.get('cliente_email')
+    telefone = request.form.get('cliente_telefone')
+    senha = request.form.get('cliente_senha')
+
+#Rota para excluir cliente
+@main_bp.route('/cliente_excluir', methods=['POST'])
+def cliente_excluir():
+    cliente_id = request.form.get('cliente_id')
+
+#Rota para listar cliente
+@main_bp.route('listar_cliente', methods=['GET'])
+def cliente_listar():
+    client_id = request.form.get('cliente_id')
+
 
 #O Blueprint (main_bp) é seu organizador de URLs. O comando @main_bp.route('/') é a regra que conecta um endereço web (a rota, como '/') a uma função Python (ex: def index():). 
 #Quando um usuário acessa esse endereço, o Flask executa a função conectada. Essa função usa render_template para criar o HTML da página e o servidor Flask envia esse HTML de volta ao navegador do usuário.
