@@ -1,6 +1,9 @@
 
-from flask import Blueprint, render_template, request, redirect, url_for  #blueprint organiza as rotas em modulos separados/render_template processa os arquivos html/request pega os dados do formulario/redirect: funcão que envia uma resposta ao navegador, redirecionando o usuario/url_for cria urls dinamicas 
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash #blueprint organiza as rotas em modulos separados/render_template processa os arquivos html/request pega os dados do formulario/redirect: funcão que envia uma resposta ao navegador, redirecionando o usuario/url_for cria urls dinamicas 
+from werkzeug.security import generate_password_hash, check_password_hash # pra criptografa a senha
 
+from .models import Cliente # chamando o "cliente" do banco de dados
+from . import db # trouxemos o banco de dados
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
@@ -35,12 +38,65 @@ def relatorio():
 # CRUDE
 
 # Rota do cliente novo
-@main_bp.route('/cliente_novo', methods=['POST'])
+@main_bp.route('/cliente_novo', methods=['GET' ,'POST'])
 def cliente_novo():
-    nome = request.form.get('cliente_nome')
-    email = request.form.get('cliente_email')
-    telefone = request.form.get('cliente_telefone')
-    senha = request.form.get('cliente_senha')
+    if request.method == 'POST':
+        nome = request.form.get('cliente_nome')
+        email = request.form.get('cliente_email')
+        senha = request.form.get('cliente_senha')
+        
+        #verifica se o email existe (Já esta cadastrado)
+        email_existe = Cliente.query.filter_by(cliente_email=email).first()
+
+        if email_existe:
+            return "Email já cadastrado"
+        
+        # criptografar a senha
+        senha_criptografada = generate_password_hash(senha, method='pbkdf2:sha256')
+
+        # instanciar o novo cliente # GUARDAMOS A SENHA COMO HASHED POIS TEMOS QUE GUARDALA CRIPTOGRAFADA
+        novo_cliente = Cliente(
+            cliente_nome=nome,
+            cliente_email=email,
+            cliente_senha=senha_criptografada
+        )
+
+        # salvamos no banco de dados com os seguintes comandos
+        db.session.add(novo_cliente)
+        db.session.commit()
+        
+        # se tude der certo manda pra pagina do scaner
+        return redirect(url_for('scaner.html'))
+    
+    # se a pessoa tentar o metodo GET mantem na pagina de cadastro!
+    return render_template ('cadastro.html')
+
+
+
+# Rota para cliente logar
+@main_bp.route('/cliente_entrar', methods=['GET', 'POST'])
+def cliente_entrar():
+    if request.mothod == 'POST':
+        email = request.form.get('email')
+        senha = request.form.get('senha')
+
+        #Procura o email do cliente no banco de dados
+        cliente = Cliente.query.filter_by(cliente_email=email).first()
+
+        #Ve se o usuario existe e se a senha é igual a do BD
+
+        if cliente and check_password_hash(cliente.cliente_senha, senha):
+            # Login bem-sucedido!
+            session['cliente_id'] = cliente.id # Guarda o ID do cliente na sessão
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('main.scanner'))
+        else:
+            # login falhou
+            flash('E-mail ou senha inválidos.', 'danger')
+            return redirect(url_for('main.cliente_entrar'))
+    
+    return render_template('cliente_entrar.html')
+
 
 # Rota para editar cliente
 @main_bp.route('/cliente_editar', methods=['POST'])
@@ -57,7 +113,7 @@ def cliente_excluir():
     cliente_id = request.form.get('cliente_id')
 
 #Rota para listar cliente
-@main_bp.route('listar_cliente', methods=['GET'])
+@main_bp.route('/listar_cliente', methods=['GET'])
 def cliente_listar():
     client_id = request.form.get('cliente_id')
 

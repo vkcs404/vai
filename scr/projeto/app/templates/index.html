@@ -1,109 +1,26 @@
-<!--
-TERMOS DE USO DO SERVIÇO DE SCANNER DE SEGURANÇA
-
-Última atualização: 04/10/2024
-
-Bem-vindo(a) ao VAI, um serviço online que realiza varreduras técnicas (scans) em domínios e servidores autorizados, com o objetivo de identificar portas abertas, vulnerabilidades em cabeçalhos HTTP e outras falhas de configuração de segurança.
-
-Antes de utilizar o serviço, leia atentamente estes Termos de Uso. Ao marcar a caixa “Li e aceito os Termos de Uso”, você declara que compreende e concorda integralmente com as condições abaixo.
----
-1. Finalidade do Serviço
-
-O VAi destina-se exclusivamente à realização de análises de segurança autorizadas em sites, servidores e domínios de titularidade do usuário.
-
-O serviço tem caráter diagnóstico e educativo, fornecendo relatórios técnicos e sugestões de correção com base em boas práticas de segurança.
-
-O retatório gerado ficrá disponível por 30 dias no painel do usuário.
----
-2. Autorização e Responsabilidade do Usuário
-
-2.1. O usuário declara e garante que:
-
-É o titular legítimo do domínio ou servidor a ser escaneado; ou
-Possui autorização formal do titular para realizar o teste de segurança.
-
-2.2. O usuário é integralmente responsável pelas URLs, domínios e endereços IP inseridos no sistema.
-
-2.3. O usuário reconhece que o envio de um domínio sem a devida autorização pode configurar acesso indevido ou atividade ilícita conforme a legislação brasileira (art. 154-A do Código Penal e Lei nº 12.965/2014 – Marco Civil da Internet).
-
-2.4. O VAI não se responsabiliza por varreduras realizadas em alvos não autorizados informados pelo usuário.
-
-2.5. Em caso de denúncia, ordem judicial ou solicitação de autoridade competente, os registros de autorização e logs de uso poderão ser compartilhados, conforme previsto na legislação vigente.
----
- 3. Escopo Técnico e Limitações
-
-3.1. O scanner realiza verificações não intrusivas, limitadas a:
-
-* Identificação de portas abertas;
-* Análise de cabeçalhos HTTP;
-* Geração de relatório técnico com recomendações.
-
-3.2. O sistema não executa exploits, não altera dados, não realiza ataques de negação de serviço (DoS) e não coleta informações privadas de usuários finais.
-
-3.3. O uso indevido do serviço para exploração, invasão, ou coleta não autorizada de dados é estritamente proibido e poderá resultar em bloqueio imediato da conta, cancelamento do acesso e comunicação às autoridades competentes.
----
-4. Privacidade e Proteção de Dados (LGPD)
-
-4.1. O tratamento de dados pessoais pelo VAI segue os princípios e regras da Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
-
-4.2. As informações coletadas são utilizadas exclusivamente para:
-
-* Execução do contrato de prestação de serviço;
-* Cumprimento de obrigações legais e regulatórias;
-* Segurança e prevenção a fraudes.
-
-4.3. Em caso de incidente de segurança que envolva dados pessoais, o VAI compromete-se a comunicar a Autoridade Nacional de Proteção de Dados (ANPD) e os titulares afetados, conforme o regulamento vigente.
----
-5. Pagamentos e Entrega de Relatórios
-
-5.1. O serviço é prestado mediante pagamento conforme plano selecionado.
-
-5.2. Após a confirmação do pagamento e da autorização de domínio, o relatório será disponibilizado no painel do usuário.
-
-5.3. Não serão reembolsados valores.
----
-6. Proibições Específicas
-
-O usuário não pode:
-
-* Inserir domínios de terceiros sem autorização;
-* Utilizar o sistema para ataques, exploração de vulnerabilidades ou coleta de dados pessoais;
-* Redistribuir, revender ou reutilizar os relatórios para fins comerciais sem autorização;
-* Tentar burlar limitações técnicas, como limites de requisições ou autenticação.
----
-7. Responsabilidade e Isenção
-
-7.1. O VAI fornece os relatórios “no estado em que se encontram”, sem garantia absoluta de exatidão ou completude, já que vulnerabilidades podem variar conforme tempo, ambiente e infraestrutura do alvo.
-
-7.2. O sistema não se responsabiliza por prejuízos diretos ou indiretos decorrentes do uso ou interpretação dos relatórios.
----
-8. Disposições Finais
-
-8.1. Estes Termos podem ser atualizados periodicamente. A versão vigente estará sempre disponível no site.
----
-Declaração de Aceite
-
-☐ Declaro que li e aceito integralmente os Termos de Uso e a Política de Privacidade.
-☐ Declaro ser o proprietário do domínio inserido ou possuir autorização formal do titular para a execução do scan.
--->
-
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Vai</title>
+</head>
 <body>
-
-    <div class="container">
-        <h1>Inserir URL para Escaneamento</h1>
-        
-        <form id="urlForm">
-            <label for="urlInput">URL ou IP do Site:</label>
-            <input type="text" id="urlInput" placeholder="exemplo.com ou 192.168.1.1" required>
-            
-            <button type="submit">Analisar e Escanear</button>
-            
-            <div id="feedback"></div>
-        </form>
+    <!-- NavBar menuzinho de cima onde vai pra home(index) e para cadastro/login -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Entrar</a>
+            <a href="/cadastro">Cadastrar</a>
+        </nav>
     </div>
 
-    <script src="script.js"></script>
+    <div class="chama_pagamento">
+        <h2>Gere seu relatorio!</h2>
+        <button>
+            <a href="/pagamento">Pagamento</a>
+        </button>
+    </div>
 </body>
-.
-
+</html>
