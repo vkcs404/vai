@@ -28,7 +28,12 @@ def pagamento():
 # Rota para scanear
 @main_bp.route('/scaner')
 def scaner():
-    return render_template('scaner.html')
+    if request.method == 'POST':
+        site_url = request.form.get('site_url')  # pega a URL do formulário
+        relatorio = f"Relatório gerado com sucesso para o site: {site_url}" # Simula a geração de um relatório
+        return render_template('relatorio.html', relatorio=relatorio) # Envia o resultado para a página de relatório
+    else:
+        return render_template('scaner.html') # Quando o usuário apenas acessa a página (sem enviar o form) - GET
 
 # Rota para ver os relatorios 
 @main_bp.route('/relatorio')
@@ -68,7 +73,7 @@ def cliente_novo():
         # se tude der certo manda pra pagina do scaner
         return redirect(url_for('scaner.html'))
     
-    # se a pessoa tentar o metodo GET mantem na pagina de cadastro!
+    # se a pessoa tentar o metodo GET mantem na pagina de cadastro
     return render_template ('cadastro.html')
 
 
@@ -86,7 +91,7 @@ def cliente_entrar():
         #Ve se o usuario existe e se a senha é igual a do BD
 
         if cliente and check_password_hash(cliente.cliente_senha, senha):
-            # Login bem-sucedido!
+            # Login bem-sucedido
             session['cliente_id'] = cliente.id # Guarda o ID do cliente na sessão
             flash('Login realizado com sucesso!', 'success')
             return redirect(url_for('main.scanner'))

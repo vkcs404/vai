@@ -6,6 +6,15 @@
     <title>Vai</title>
 </head>
 <body>
-    <!-- Coloca um form que recebe a URL do site para scanear! nao precisa funcionar-->
+    <h1>Escaneamento de Site</h1>
+    <p>Insira a URL do site que deseja escanear</p>
+
+    <form id="scan-form" action="/scan" method="POST">
+        <label for="site-url">URL do site:</label><br>
+        <input type="url" id="site-url" name="site_url" placeholder="https://www.exemplo.com" required><br><br>
+        <button type="submit">Iniciar análise</button>
+    </form>
 </body>
 </html>
+
+
