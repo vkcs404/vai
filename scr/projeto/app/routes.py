@@ -47,6 +47,7 @@ def cliente_novo():
     if request.method == 'POST':
         nome = request.form.get('cliente_nome')
         email = request.form.get('cliente_email')
+        telefone = request.form.get('cliente_tel')
         senha = request.form.get('cliente_senha')
         
         #verifica se o email existe (Já esta cadastrado)
@@ -55,10 +56,17 @@ def cliente_novo():
         if email_existe:
             return "Email já cadastrado"
         
+        tel_existe = Cliente.query.filter_by(cliente_tel=telefone).first()
+
+        if tel_existe:
+            return "telefone ja cadastrado"
+        
         # criptografar a senha
+        # biblioteca padrao do py para criptografar
         senha_criptografada = generate_password_hash(senha, method='pbkdf2:sha256')
 
         # instanciar o novo cliente # GUARDAMOS A SENHA COMO HASHED POIS TEMOS QUE GUARDALA CRIPTOGRAFADA
+        #colocar no bd 
         novo_cliente = Cliente(
             cliente_nome=nome,
             cliente_email=email,
