@@ -28,12 +28,11 @@ def pagamento():
 # Rota para scanear
 @main_bp.route('/scaner')
 def scaner():
-    if request.method == 'POST':
-        site_url = request.form.get('site_url')  # pega a URL do formulário
-        relatorio = f"Relatório gerado com sucesso para o site: {site_url}" # Simula a geração de um relatório
-        return render_template('relatorio.html', relatorio=relatorio) # Envia o resultado para a página de relatório
-    else:
-        return render_template('scaner.html') # Quando o usuário apenas acessa a página (sem enviar o form) - GET
+    return render_template('scaner.html')
+
+@main_bp.route('/scan')
+def scan():
+    return render_template('relatorio.html')
 
 # Rota para ver os relatorios 
 @main_bp.route('/relatorio')
@@ -71,7 +70,7 @@ def cliente_novo():
         db.session.commit()
         
         # se tude der certo manda pra pagina do scaner
-        return redirect(url_for('scaner.html'))
+        return redirect(url_for('main.scaner'))
     
     # se a pessoa tentar o metodo GET mantem na pagina de cadastro
     return render_template ('cadastro.html')
@@ -81,9 +80,9 @@ def cliente_novo():
 # Rota para cliente logar
 @main_bp.route('/cliente_entrar', methods=['GET', 'POST'])
 def cliente_entrar():
-    if request.mothod == 'POST':
-        email = request.form.get('email')
-        senha = request.form.get('senha')
+    if request.method == 'POST':
+        email = request.form.get('cliente_email')
+        senha = request.form.get('cliente_senha')
 
         #Procura o email do cliente no banco de dados
         cliente = Cliente.query.filter_by(cliente_email=email).first()
@@ -94,13 +93,13 @@ def cliente_entrar():
             # Login bem-sucedido
             session['cliente_id'] = cliente.id # Guarda o ID do cliente na sessão
             flash('Login realizado com sucesso!', 'success')
-            return redirect(url_for('main.scanner'))
+            return redirect(url_for('main.scaner'))
         else:
             # login falhou
             flash('E-mail ou senha inválidos.', 'danger')
             return redirect(url_for('main.cliente_entrar'))
     
-    return render_template('cliente_entrar.html')
+    return render_template('login.html')
 
 
 # Rota para editar cliente
