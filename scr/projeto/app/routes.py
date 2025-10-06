@@ -4,11 +4,11 @@ from werkzeug.security import generate_password_hash, check_password_hash # pra 
 
 from .models import Cliente # chamando o "cliente" do banco de dados
 from . import db # trouxemos o banco de dados
-main_bp = Blueprint('main', __name__)
+main_bp = Blueprint('main', __name__) # Cria o Blueprint chamado 'main' para organizar as rotas
 
-@main_bp.route('/')
+@main_bp.route('/') # O @main_bp indica ao Flask que esta rota pertence ao módulo 'main'
 def index(): #rotas que usam o método GET não precisam receber nenhum parametro na função - GET eh o metodo padrao que o flask assume quando nao ha especificacao
-    return render_template('index.html')
+    return render_template('index.html') # render_template: Envia a respectiva página para o usuário.
 
 # Rota para cadastrar
 @main_bp.route('/cadastro')
@@ -30,15 +30,10 @@ def pagamento():
 def scaner():
     return render_template('scaner.html')
 
-@main_bp.route('/scan')
-def scan():
-    return render_template('relatorio.html')
-
 # Rota para ver os relatorios 
 @main_bp.route('/relatorio')
 def relatorio():
     return render_template('relatorio.html')
-
 
 
 # CRUDE
@@ -106,3 +101,7 @@ def cliente_entrar():
     return render_template('login.html')
 
 
+#cliente_editar
+#cliente_excluir
+#cliente_listar 
+ 

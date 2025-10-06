@@ -9,12 +9,11 @@
     <h1>Escaneamento de Site</h1>
     <p>Insira a URL do site que deseja escanear</p>
 
-    <form id="scanner" action="/scan" method="POST">
+    <form id="scanner" action="/scaner" method="POST">  Formulário que envia os dados para a rota /scaner usando POST / action="/scaner" -> caminho no servidor que receberá o POST
         <label for="site-url">URL do site:</label><br>
         <input type="url" id="url" name="url" placeholder="https://www.exemplo.com" required><br><br>
         <button type="submit">Iniciar análise</button>
     </form>
 </body>
 </html>
-
 
