@@ -4,3 +4,9 @@ Flask-SQLAlchemy
 
 Site para pegar como routes
 https://flask.palletsprojects.com/en/stable/patterns/sqlite3/
+
+https://dev.to/driuzim/api-simples-em-flask-conectando-em-um-sqlite-5mm
+
+
+
+

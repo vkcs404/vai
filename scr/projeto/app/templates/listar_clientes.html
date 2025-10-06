@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Gerenciar Clientes</title>
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Status Atual</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.id }}</td>
+                <td>{{ cliente.cliente_nome }}</td>
+                <td>{{ cliente.cliente_email }}</td>
+                <td>{{ cliente.cliente_status }}</td>
+                <td>
+                    <form action="{{ url_for('main.alternar_status', cliente_id=cliente.id) }}" method="POST">
+                        <button type="submit">
+                            {% if cliente.cliente_status == 'ativo' %}
+                                Desativar
+                            {% else %}
+                                Ativar
+                            {% endif %}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
