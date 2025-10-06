@@ -1,2 +1,6 @@
 Flask 
 Flask-SQLAlchemy
+
+
+Site para pegar como routes
+https://flask.palletsprojects.com/en/stable/patterns/sqlite3/

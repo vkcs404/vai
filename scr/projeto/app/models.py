@@ -5,4 +5,5 @@ class Cliente(db.Model):
     cliente_nome = db.Column(db.String(80), nullable=False) # Nao pode estar vazio
     cliente_email = db.Column(db.String(320), unique=True, nullable=False)
     cliente_senha = db.Column(db.String(128))
+    cliente_status = db.Colum(db.Integer(2))
 
