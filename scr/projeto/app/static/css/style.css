@@ -1,0 +1,111 @@
+/* Reset e configurações base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', 'Poppins', 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #000000 0%, #03002b 100%);
+  min-height: 100%;
+  color: #ffffff;
+}
+
+html {
+  height: 100%;
+}
+
+/* Barra de Navegação */
+nav {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+/* Seção Principal - Call to Action */
+.chama_pagamento {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.chama_pagamento h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2.5rem;
+  letter-spacing: 1px;
+}
+
+/* Botão Principal */
+.chama_pagamento button {
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 1.2rem 3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.3);
+}
+
+.chama_pagamento button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, #00e5ff 0%, #00aaff 100%);
+}
+
+.chama_pagamento button:active {
+  transform: translateY(-1px);
+}
+
+.chama_pagamento button a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .chama_pagamento h2 {
+    font-size: 2rem;
+  }
+  
+  nav {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  nav a {
+    font-size: 0.9rem;
+  }
+  
+  .chama_pagamento button {
+    padding: 1rem 2rem;
+  }
+  
+  .chama_pagamento button a {
+    font-size: 1rem;
+  }
+}
