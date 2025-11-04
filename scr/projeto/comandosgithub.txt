@@ -1,3 +1,7 @@
+ source venv/bin/activate
+ cd source
+ cd projeto
+ 
  - Antes de codar:
         - Git pull - puxa todas as atualizações do repositório para o seu vscode. A gente faz isso ANTES de começar a codar, pq daí temos certeza que estamos com a versão mais atualizada do projeto.
     - Após codar:
