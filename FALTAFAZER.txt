@@ -1,0 +1,14 @@
+Ver essa especificacao no AVA: https://pucpr.instructure.com/courses/55421/discussion_topics/217594
+
+tabela adm
+tabela relatorio basico
+tabela relatorio medio
+tabela relaotio avancado 
+
+
+CSS - Yas
+
+scanner 
+
+3 tipos diferentes de relatorios 
+
