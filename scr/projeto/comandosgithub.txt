@@ -1,0 +1,44 @@
+ - Antes de codar:
+        - Git pull - puxa todas as atualizações do repositório para o seu vscode. A gente faz isso ANTES de começar a codar, pq daí temos certeza que estamos com a versão mais atualizada do projeto.
+    - Após codar:
+        - git status - verifica quais arquivos foram alterados
+        - git add . - adiciona todas as alterações
+        - git commit -m “Sua mensagem aq” - faz o famoso “commit”, ou seja, salva as alterações, e escreve uma mensagem breve que vai aparecer no github para avisar o q foi feito
+        - git push origin main - envia as alterações para a branch principal do github
+
+## Conceitos chave:
+
+Repositório: é a pasta do projeto no github
+
+Branch: um projeto tem várias branches (ou versões), a principal é a main - ela é a versão definitiva do projeto. Quando tem duas pessoas ou mais codando ao mesmo tempo, cada uma cria uma branch nova, para que dps no github consiga enviar as duas pra versão principal (main) sem conflitos.
+
+Pull request: é a etapa no github que a gente pede que a nossa branch seja implementada na main
+
+## Comandos:
+
+- Se você está trabalhando sozinho no projeto:
+    - Antes de codar:
+        - Git pull - puxa todas as atualizações do repositório para o seu vscode. A gente faz isso ANTES de começar a codar, pq daí temos certeza que estamos com a versão mais atualizada do projeto.
+    - Após codar:
+        - git status - verifica quais arquivos foram alterados
+        - git add . - adiciona todas as alterações
+        - git commit -m “Sua mensagem aq” - faz o famoso “commit”, ou seja, salva as alterações, e escreve uma mensagem breve que vai aparecer no github para avisar o q foi feito
+        - git push origin main - envia as alterações para a branch principal do github
+- Se você está trabalhando em grupo no projeto:
+    - Antes de codar:
+        - Git pull - puxa todas as atualizações do repositório para o seu vscode. A gente faz isso ANTES de começar a codar, pq daí temos certeza que estamos com a versão mais atualizada do projeto.
+    - Após codar:
+        - git checkout -b minha-branch (-b cria a branch e já muda para ela)
+        minha-branch pode ter um nome descritivo, como adicionar-login ou corrigir-bug-navbar.
+        - git add .
+        - git commit -m "Mensagem clara sobre as alterações"
+        - git push origin minha-branch
+        - Crie o Pull Request (PR)
+        
+        No GitHub:
+        
+    1. Abra o repositório.
+    2. Você verá a opção de criar um PR da branch que acabou de subir.
+    3. Escolha como base a `main` (ou a branch principal do projeto) e a sua branch como **branch de comparação**.
+    4. Adicione descrição do que foi feito.
+    5. Envie o PR.
