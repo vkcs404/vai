@@ -3,36 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar no Vai</title>
+    <title>Cadastrar no Vai - Consentimento LGPD</title>
+    <!-- Carrega Tailwind CSS para estilização moderna e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define a fonte Inter como padrão */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        /* Estilização para o overlay do modal */
+        #lgpd-modal-overlay {
+            z-index: 100;
+            display: none; /* Inicia oculto */
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1c45c3',
+                        'accent-green': '#10b981',
+                        'soft-gray': '#e5e7eb',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <h1>Area do cadastro</h1>
-    <div>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/login">Login</a>
-            <a href="/cadastro">Cadastrar</a>
+<body class="bg-gray-50">
+
+    <!-- HEADER/NAVBAR -->
+    <header class="w-full max-w-lg mb-8">
+        <h1 class="text-3xl font-extrabold text-primary-blue text-center">Area do Cadastro</h1>
+        <nav class="flex justify-center space-x-4 mt-4 text-sm font-medium">
+            <a href="/" class="text-gray-600 hover:text-primary-blue transition duration-150">Home</a>
+            <span class="text-gray-400">|</span>
+            <a href="/login" class="text-gray-600 hover:text-primary-blue transition duration-150">Login</a>
+            <span class="text-gray-400">|</span>
+            <a href="/cadastro" class="text-primary-blue font-semibold">Cadastrar</a>
         </nav>
-    </div>
+    </header>
 
-    <div>
-        <h2>Cadastre-se</h2>
-        <form method="POST" action="/cliente_novo">
+    <!-- FORMULÁRIO DE CADASTRO -->
+    <div class="w-full max-w-lg bg-white p-8 shadow-2xl rounded-xl">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Cadastre-se</h2>
+        <form id="cadastroForm" method="POST" action="/cliente_novo" class="space-y-5">
             <div>
-                <label for="nome">Nome: </label>
-                <input type="text" id="cliente_nome" name="cliente_nome" required>
+                <label for="cliente_nome" class="block text-sm font-medium text-gray-700 mb-1">Nome:</label>
+                <input type="text" id="cliente_nome" name="cliente_nome" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-blue focus:border-primary-blue transition duration-150 shadow-sm">
             </div>
             <div>
-                <label for="email">Email: </label>
-                <input type="text" name="cliente_email" id="cliente_email" required>
+                <label for="cliente_email" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
+                <input type="email" name="cliente_email" id="cliente_email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-blue focus:border-primary-blue transition duration-150 shadow-sm">
             </div>
             <div>
-                <label for="senha">Senha: </label>
-                <input type="password" name="cliente_senha" id="cliente_senha" required>
+                <label for="cliente_senha" class="block text-sm font-medium text-gray-700 mb-1">Senha:</label>
+                <input type="password" name="cliente_senha" id="cliente_senha" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary-blue focus:border-primary-blue transition duration-150 shadow-sm">
             </div>
 
-            <button type="submit"> Cadastrar</button>
+            <!-- Botão que acionará o modal, não o submit direto -->
+            <button type="button" id="openModalButton" class="w-full bg-primary-blue text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition duration-300 shadow-md">
+                Cadastrar
+            </button>
         </form>
     </div>
+
+    <!-- MODAL DE TERMOS DE USO E LGPD -->
+    <div id="lgpd-modal-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+
+            <!-- Título do Modal -->
+            <header class="p-6 border-b border-soft-gray">
+                <h3 class="text-xl font-bold text-gray-800">Termos de Uso e LGPD (Lei nº 13.709/2018)</h3>
+            </header>
+
+            <!-- Conteúdo dos Termos (Scrollable) -->
+            <div id="termsContent" class="p-6 overflow-y-auto flex-grow text-gray-700 text-sm space-y-4">
+                <p class="font-semibold text-base mb-4">Última atualização: 04/10/2024</p>
+
+                <p>Bem-vindo(a) ao VAI, um serviço online que realiza varreduras técnicas (scans) em domínios e servidores autorizados, com o objetivo de identificar portas abertas, vulnerabilidades em cabeçalhos HTTP e outras falhas de configuração de segurança.</p>
+
+                <p class="font-semibold">Antes de utilizar o serviço, leia atentamente estes Termos de Uso. Ao marcar a caixa de aceite, você declara que compreende e concorda integralmente com as condições abaixo.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">1. Finalidade do Serviço</h4>
+                <p>O VAI destina-se exclusivamente à realização de análises de segurança autorizadas em sites, servidores e domínios de titularidade do usuário.</p>
+                <p>O serviço tem caráter diagnóstico e educativo, fornecendo relatórios técnicos e sugestões de correção com base em boas práticas de segurança.</p>
+                <p>O relatório gerado ficará disponível por 30 dias no painel do usuário.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">2. Autorização e Responsabilidade do Usuário</h4>
+                <p class="font-semibold mt-2">2.1. O usuário declara e garante que:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>É o titular legítimo do domínio ou servidor a ser escaneado; ou</li>
+                    <li>Possui autorização formal do titular para realizar o teste de segurança.</li>
+                </ul>
+                <p>2.2. O usuário é integralmente responsável pelas URLs, domínios e endereços IP inseridos no sistema.</p>
+                <p>2.3. O usuário reconhece que o envio de um domínio sem a devida autorização pode configurar acesso indevido ou atividade ilícita conforme a legislação brasileira (art. 154-A do Código Penal e Lei nº 12.965/2014 – Marco Civil da Internet).</p>
+                <p>2.4. O VAI não se responsabiliza por varreduras realizadas em alvos não autorizados informados pelo usuário.</p>
+                <p>2.5. Em caso de denúncia, ordem judicial ou solicitação de autoridade competente, os registros de autorização e logs de uso poderão ser compartilhados, conforme previsto na legislação vigente.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">3. Escopo Técnico e Limitações</h4>
+                <p class="font-semibold mt-2">3.1. O scanner realiza verificações não intrusivas, limitadas a:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>Identificação de portas abertas;</li>
+                    <li>Análise de cabeçalhos HTTP;</li>
+                    <li>Geração de relatório técnico com recomendações.</li>
+                </ul>
+                <p>3.2. O sistema não executa exploits, não altera dados, não realiza ataques de negação de serviço (DoS) e não coleta informações privadas de usuários finais.</p>
+                <p>3.3. O uso indevido do serviço para exploração, invasão, ou coleta não autorizada de dados é estritamente proibido e poderá resultar em bloqueio imediato da conta, cancelamento do acesso e comunicação às autoridades competentes.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">4. Privacidade e Proteção de Dados (LGPD)</h4>
+                <p>4.1. O tratamento de dados pessoais pelo VAI segue os princípios e regras da Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
+                <p>4.2. As informações coletadas (Nome, Email, Senha - que será armazenada de forma segura) são utilizadas exclusivamente para:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>Execução do contrato de prestação de serviço (manter sua conta e acessos);</li>
+                    <li>Cumprimento de obrigações legais e regulatórias;</li>
+                    <li>Segurança e prevenção a fraudes.</li>
+                </ul>
+                <p>4.3. Em caso de incidente de segurança que envolva dados pessoais, o VAI compromete-se a comunicar a Autoridade Nacional de Proteção de Dados (ANPD) e os titulares afetados, conforme o regulamento vigente.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">5. Pagamentos e Entrega de Relatórios</h4>
+                <p>5.1. O serviço é prestado mediante pagamento conforme plano selecionado.</p>
+                <p>5.2. Após a confirmação do pagamento e da autorização de domínio, o relatório será disponibilizado no painel do usuário.</p>
+                <p>5.3. Não serão reembolsados valores.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">6. Proibições Específicas</h4>
+                <p>O usuário não pode:</p>
+                <ul class="list-disc list-inside ml-4 space-y-1">
+                    <li>Inserir domínios de terceiros sem autorização;</li>
+                    <li>Utilizar o sistema para ataques, exploração de vulnerabilidades ou coleta de dados pessoais;</li>
+                    <li>Redistribuir, revender ou reutilizar os relatórios para fins comerciais sem autorização;</li>
+                    <li>Tentar burlar limitações técnicas, como limites de requisições ou autenticação.</li>
+                </ul>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">7. Responsabilidade e Isenção</h4>
+                <p>7.1. O VAI fornece os relatórios “no estado em que se encontram”, sem garantia absoluta de exatidão ou completude, já que vulnerabilidades podem variar conforme tempo, ambiente e infraestrutura do alvo.</p>
+                <p>7.2. O sistema não se responsabiliza por prejuízos diretos ou indiretos decorrentes do uso ou interpretação dos relatórios.</p>
+
+                <h4 class="font-bold text-lg text-primary-blue mt-6">8. Disposições Finais</h4>
+                <p>8.1. Estes Termos podem ser atualizados periodicamente. A versão vigente estará sempre disponível no site.</p>
+
+            </div>
+
+            <!-- Rodapé do Modal com Checkbox e Botão de Ação -->
+            <footer class="p-6 border-t border-soft-gray space-y-4">
+                <div class="flex items-start">
+                    <input type="checkbox" id="lgpdConsent" class="mt-1 h-5 w-5 rounded text-primary-blue focus:ring-primary-blue border-gray-300">
+                    <label for="lgpdConsent" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">
+                        Declaro que li e aceito integralmente os <span class="font-bold">Termos de Uso</span>, a <span class="font-bold">Política de Privacidade</span> e consinto com o <span class="font-bold">Tratamento dos meus Dados Pessoais</span>, conforme a LGPD.
+                    </label>
+                </div>
+
+                <button type="button" id="confirmConsentButton" disabled class="w-full bg-accent-green text-white py-3 rounded-xl font-semibold opacity-50 cursor-not-allowed transition duration-300 shadow-md">
+                    Aceitar e Cadastrar
+                </button>
+                <button type="button" id="cancelConsentButton" class="w-full text-gray-600 py-2 rounded-xl border border-gray-300 hover:bg-gray-100 transition duration-300">
+                    Cancelar
+                </button>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        // O código JavaScript (JS) a seguir é NECESSÁRIO e padronizado
+        // em todos os navegadores modernos para controlar o fluxo do formulário
+        // e exibir/ocultar o modal de consentimento da LGPD.
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('cadastroForm');
+            const openModalButton = document.getElementById('openModalButton');
+            const modalOverlay = document.getElementById('lgpd-modal-overlay');
+            const lgpdConsent = document.getElementById('lgpdConsent');
+            const confirmConsentButton = document.getElementById('confirmConsentButton');
+            const cancelConsentButton = document.getElementById('cancelConsentButton');
+            const termsContent = document.getElementById('termsContent');
+
+            // 1. Abrir Modal ao tentar cadastrar
+            openModalButton.addEventListener('click', (event) => {
+                // Previne a submissão direta do formulário principal
+                event.preventDefault();
+
+                // Exibe o modal
+                modalOverlay.style.display = 'flex';
+                
+                // Garante que o usuário veja os termos rolando para o topo
+                termsContent.scrollTop = 0; 
+            });
+
+            // 2. Controlar o botão de confirmação pelo checkbox
+            lgpdConsent.addEventListener('change', () => {
+                const isChecked = lgpdConsent.checked;
+                confirmConsentButton.disabled = !isChecked;
+                
+                // Estilização condicional do botão
+                if (isChecked) {
+                    confirmConsentButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    confirmConsentButton.classList.add('hover:bg-green-600');
+                } else {
+                    confirmConsentButton.classList.add('opacity-50', 'cursor-not-allowed');
+                    confirmConsentButton.classList.remove('hover:bg-green-600');
+                }
+            });
+
+            // 3. Submeter o formulário ao confirmar no modal
+            confirmConsentButton.addEventListener('click', () => {
+                if (lgpdConsent.checked) {
+                    // Oculta o modal
+                    modalOverlay.style.display = 'none';
+
+                    // Submete o formulário principal
+                    form.submit();
+                } else {
+                    // Embora o botão esteja desabilitado, é bom ter uma segurança extra
+                    console.error("Consentimento LGPD não fornecido.");
+                }
+            });
+
+            // 4. Cancelar e fechar o modal
+            cancelConsentButton.addEventListener('click', () => {
+                modalOverlay.style.display = 'none';
+                // Opcional: Desmarca o checkbox ao cancelar
+                lgpdConsent.checked = false;
+                lgpdConsent.dispatchEvent(new Event('change')); // Atualiza o estado visual do botão de aceite
+            });
+
+            // 5. Fechar modal clicando fora (opcional, mas bom para UX)
+            modalOverlay.addEventListener('click', (event) => {
+                // Se o clique foi exatamente no overlay (não no conteúdo do modal)
+                if (event.target === modalOverlay) {
+                    modalOverlay.style.display = 'none';
+                    lgpdConsent.checked = false;
+                    lgpdConsent.dispatchEvent(new Event('change'));
+                }
+            });
+
+            // 6. Impedir que o modal feche com a tecla ESC (Melhora a acessibilidade, forçando o aceite)
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
