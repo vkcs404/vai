@@ -1,27 +1,42 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vai | Scanner</title>
-</head>
-<body>
-    <h1>Escaneamento de Site</h1>
-    <p>Insira a URL do site que deseja escanear</p>
+<div class="container">
 
-    <form id="scanner" action="/scan" method="POST">
-        <label for="site-url">URL do site:</label><br>
-        <input type="url" id="url" name="url" placeholder="https://www.exemplo.com" required><br><br>
-        <button type="submit">Iniciar análise</button>
-    </form>
-
-    <div>
-        <form method="POST" action="/listar_clientes">
-            <label for="status">Status: </label>
-            <input type="number" name="status" id="status">
+    <h2>Scanner Nível: {{ cliente.nivel_acesso.title() }}</h2>
+    
+    {% if cliente.nivel_acesso == 'avancado' %}
+    
+        <p>Insira o domínio (ex: google.com) para iniciar o scan avançado.</p>
+        
+        <form action="{{ url_for('main.executar_scanner_avancado') }}" method="POST">
+            <div class="mb-3">
+                <label for="alvo" class="form-label">Domínio Alvo:</label>
+                <input type="text" class="form-control" id="alvo" name="alvo" placeholder="ex: seudominio.com" required>
+            </div>
+            <button type="submit" class="btn btn-danger">Iniciar Scan Avançado</button>
         </form>
+
+    {% elif cliente.nivel_acesso == 'intermediario' %}
+
+        <p>Insira o domínio para o scan intermediário.</p>
+        <form action="{{ url_for('main.executar_scanner_intermediario') }}" method="POST">
+            <div class="mb-3">
+                <label for="alvo" class="form-label">Domínio Alvo:</label>
+                <input type="text" class="form-control" id="alvo" name="alvo" placeholder="ex: seudominio.com" required>
+            </div>
+            <button type="submit" class="btn btn-warning">Iniciar Scan Intermediário</button>
+        </form>
+
+    {% else %} <p>Insira o domínio para o scan básico.</p>
+        <form action="{{ url_for('main.executar_scanner_basico') }}" method="POST">
+            <div class="mb-3">
+                <label for="alvo" class="form-label">Domínio Alvo:</label>
+                <input type="text" class="form-control" id="alvo" name="alvo" placeholder="ex: seudominio.com" required>
+            </div>
+            <button type="submit" class="btn btn-info">Iniciar Scan Básico</button>
+        </form>
+
+    {% endif %}
+
+    <hr>
+    
+    <h3>Seus Relatórios Recentes (Últimos 30 dias):</h3>
     </div>
-</body>
-</html>
-
-
