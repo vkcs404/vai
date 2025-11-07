@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from .models import Cliente, RelatorioBasico, RelatorioIntermediario, RelatorioAvancado
 from . import db
 from .ferramentas.scanner_avancado import rodar_scan_avancado
+from .ferramentas.scanner_intermediario import rodar_scan_intermediario
 main_bp = Blueprint('main', __name__)
 
 # ... (todas as suas outras rotas como index, cadastro, etc. continuam iguais) ...
@@ -22,13 +23,6 @@ def login():
 def pagamento():
     return render_template('pagamento.html')
 
-@main_bp.route('/scaner')
-def scaner():
-    # Proteger esta rota: se o usuário não estiver logado, redireciona para o login.
-    if 'cliente_id' not in session:
-        flash('Você precisa estar logado para acessar esta página.', 'warning')
-        return redirect(url_for('main.login'))
-    return render_template('scaner.html')
 
 # ... (outras rotas simples) ...
 
@@ -39,7 +33,6 @@ def cliente_novo():
         nome = request.form.get('cliente_nome')
         email = request.form.get('cliente_email')
         senha = request.form.get('cliente_senha')
-        
         email_existe = Cliente.query.filter_by(cliente_email=email).first()
 
         if email_existe:
@@ -183,3 +176,43 @@ def executar_scanner_avancado():
 
 
 # --- ROTA POST para SCAN INTERMEDIÁRIO
+
+@main_bp.route('/executar_scanner_intermediario', methods=['POST'])
+def executar_scanner_intermediario():
+    
+    # --- Passo 1: Checar Login ---
+    if 'cliente_id' not in session:
+        flash('Sessão expirada. Faça login novamente.', 'danger')
+        return redirect(url_for('main.login'))
+
+    # --- Passo 2: Checar Permissão (Segurança) ---
+    cliente = Cliente.query.get(session['cliente_id'])
+    if cliente.nivel_acesso != 'avancado':
+        flash('Permissão negada. Você não tem acesso ao scanner avançado.', 'danger')
+        return redirect(url_for('main.scaner'))
+
+    # --- Passo 3: Executar e Salvar ---
+    alvo = request.form.get('alvo')
+    if not alvo:
+        flash('Alvo (domínio) não fornecido.', 'warning')
+        return redirect(url_for('main.scaner'))
+
+    try:
+        # Chama a função do seu arquivo .py
+        conteudo_do_relatorio = rodar_scan_avancado(alvo)
+
+        # Salva no modelo CORRETO (RelatorioAvancado)
+        novo_relatorio = RelatorioAvancado(
+            conteudo_tecnico=conteudo_do_relatorio,
+            cliente_id=cliente.id
+        )
+        
+        db.session.add(novo_relatorio)
+        db.session.commit()
+        
+        flash('Scan avançado concluído e relatório salvo!', 'success')
+
+    except Exception as e:
+        flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
+
+    return redirect(url_for('main.scaner'))

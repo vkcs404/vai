@@ -36,10 +36,10 @@ class RelatorioBasico(db.Model):
 
     #RELATORIO INTERMEDIARIO
 class RelatorioIntermediario(db.Model):
-    id = db.Colum(db.Integer, primary_key=True)
-    conteudo = db.Colum(db.Text, nullable=False)
-    data_criacao = db.Column(db.DataTime, nullable=False, default=datetime.utcnow)
-    client_id = db.Column(db.Integer, db.ForaignKey('cliente.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    conteudo = db.Column(db.Text, nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    client_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
 
     def _repr_(sel):
         return f'RelatorioIntermediario {self.id}>'
@@ -51,8 +51,8 @@ class RelatorioIntermediario(db.Model):
 
 
     #RELATORIO AVANÇADO
-class RalatorioAvancado(db.Model):
-    id = db.Colum(db.Integer, primary_key=True)
+class RelatorioAvancado(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     conteudo = db.Column(db.Text, nullable=False)
     data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     client_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)  #Aqui puxa a FK da tabela Cliente (relacao) - B
