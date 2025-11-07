@@ -43,6 +43,16 @@
                         </button>
                     </form>
                 </td>
+                <td>
+                    <form action="{{ url_for('main.alterar_nivel_acesso', cliente_id=cliente.id) }}" method="POST">
+                        <select name="novo_nivel" required>
+                            <option value="basico" {% if cliente.nivel_acesso == 'basico' %}selected{% endif %}>Básico</option>
+                            <option value="intermediario" {% if cliente.nivel_acesso == 'intermediario' %}selected{% endif %}>Intermediário</option>
+                            <option value="avancado" {% if cliente.nivel_acesso == 'avancado' %}selected{% endif %}>Avançado</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Mudar Nível</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

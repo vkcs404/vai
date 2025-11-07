@@ -3,4 +3,4 @@
 __pycache__/
 
 # Outros arquivos comuns a serem ignorados (opcional, mas recomendado)
-venv/
+

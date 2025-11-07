@@ -258,3 +258,41 @@ def executar_scanner_basico():
         flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
 
     return redirect(url_for('main.scaner'))
+
+
+    # Rota para Alterar o Nível de Acesso do Cliente
+@main_bp.route('/admin/alterar_nivel/<int:cliente_id>', methods=['POST'])
+def alterar_nivel_acesso(cliente_id):
+    # --- Passo 1: Checar se o USUÁRIO LOGADO é um ADMIN ---
+    # NOTA: Você deve implementar a lógica de 'admin' primeiro. 
+    # Por exemplo, checar se session['nivel_acesso'] é 'admin'.
+    # Apenas para fins de demonstração, vamos apenas checar o login.
+    if 'cliente_id' not in session:
+        flash('Acesso negado. Faça login.', 'danger')
+        return redirect(url_for('main.login'))
+    
+    # *** REQUISITO DE ADMIN AQUI:
+    # admin = Cliente.query.get(session['cliente_id'])
+    # if admin.nivel_acesso != 'admin': 
+    #     flash('Acesso restrito a administradores.', 'danger')
+    #     return redirect(url_for('main.index'))
+    # *** FIM DO REQUISITO DE ADMIN
+
+    cliente_alvo = Cliente.query.get_or_404(cliente_id)
+    novo_nivel = request.form.get('novo_nivel')
+    
+    # Lista de níveis válidos para evitar injeção de dados
+    niveis_validos = ['basico', 'intermediario', 'avancado']
+
+    if novo_nivel and novo_nivel in niveis_validos:
+        
+        # Altera o nível do cliente no banco de dados
+        cliente_alvo.nivel_acesso = novo_nivel
+        db.session.commit()
+        
+        flash(f'O nível de acesso de {cliente_alvo.cliente_nome} foi alterado para {novo_nivel.title()}.', 'success')
+    else:
+        flash('Nível de acesso inválido.', 'danger')
+    
+    # Redireciona de volta para a lista de clientes ou para onde você precisar
+    return redirect(url_for('main.listar_clientes'))
