@@ -4,6 +4,7 @@ from .models import Cliente, RelatorioBasico, RelatorioIntermediario, RelatorioA
 from . import db
 from .ferramentas.scanner_avancado import rodar_scan_avancado
 from .ferramentas.scanner_intermediario import rodar_scan_intermediario
+from .ferramentas.scanner_basico import rodar_scan_basico
 main_bp = Blueprint('main', __name__)
 
 # ... (todas as suas outras rotas como index, cadastro, etc. continuam iguais) ...
@@ -179,6 +180,47 @@ def executar_scanner_avancado():
 
 @main_bp.route('/executar_scanner_intermediario', methods=['POST'])
 def executar_scanner_intermediario():
+    
+    # --- Passo 1: Checar Login ---
+    if 'cliente_id' not in session:
+        flash('Sessão expirada. Faça login novamente.', 'danger')
+        return redirect(url_for('main.login'))
+
+    # --- Passo 2: Checar Permissão (Segurança) ---
+    cliente = Cliente.query.get(session['cliente_id'])
+    if cliente.nivel_acesso != 'avancado':
+        flash('Permissão negada. Você não tem acesso ao scanner avançado.', 'danger')
+        return redirect(url_for('main.scaner'))
+
+    # --- Passo 3: Executar e Salvar ---
+    alvo = request.form.get('alvo')
+    if not alvo:
+        flash('Alvo (domínio) não fornecido.', 'warning')
+        return redirect(url_for('main.scaner'))
+
+    try:
+        # Chama a função do seu arquivo .py
+        conteudo_do_relatorio = rodar_scan_avancado(alvo)
+
+        # Salva no modelo CORRETO (RelatorioAvancado)
+        novo_relatorio = RelatorioAvancado(
+            conteudo_tecnico=conteudo_do_relatorio,
+            cliente_id=cliente.id
+        )
+        
+        db.session.add(novo_relatorio)
+        db.session.commit()
+        
+        flash('Scan avançado concluído e relatório salvo!', 'success')
+
+    except Exception as e:
+        flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
+
+    return redirect(url_for('main.scaner'))
+
+#routa basica#
+@main_bp.route('/executar_scanner_basico', methods=['POST'])
+def executar_scanner_basico():
     
     # --- Passo 1: Checar Login ---
     if 'cliente_id' not in session:
