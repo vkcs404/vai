@@ -1,0 +1,6 @@
+# Arquivos de cache e temporários do Python
+*.pyc
+__pycache__/
+
+# Outros arquivos comuns a serem ignorados (opcional, mas recomendado)
+venv/
