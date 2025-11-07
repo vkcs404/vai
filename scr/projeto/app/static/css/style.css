@@ -109,3 +109,364 @@ nav a:hover {
     font-size: 1rem;
   }
 }
+
+/* Reset e configurações base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', 'Poppins', 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #000000 0%, #03002b 100%);
+  min-height: 100%;
+  color: #ffffff;
+}
+
+html {
+  height: 100%;
+}
+
+/* Títulos */
+h1, h2 {
+  text-align: center;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 2rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Barra de Navegação */
+nav {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+/* Container do Formulário */
+body > div:last-child {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 170, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 170, 255, 0.2);
+}
+
+/* Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Labels */
+label {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 1rem;
+  background: #1a1a2e;
+  border: 2px solid #00aaff;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  background: #252545;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #888;
+}
+
+/* Botão Submit */
+button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.3);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, #00e5ff 0%, #00aaff 100%);
+}
+
+button[type="submit"]:active {
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  nav {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  nav a {
+    font-size: 0.9rem;
+  }
+  
+  body > div:last-child {
+    margin: 1rem;
+    padding: 2rem;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.8rem;
+  }
+  
+  button[type="submit"] {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+
+/* Reset e configurações base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', 'Poppins', 'Roboto', sans-serif;
+  background: linear-gradient(to bottom, #000000 0%, #03002b 100%);
+  min-height: 100%;
+  color: #ffffff;
+}
+
+html {
+  height: 100%;
+}
+
+/* Títulos */
+h1, h2 {
+  text-align: center;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 2rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Barra de Navegação */
+nav {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+/* Container do Formulário */
+body > div:last-child {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 170, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 170, 255, 0.2);
+}
+
+/* Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Labels */
+label {
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 1rem;
+  background: #1a1a2e;
+  border: 2px solid #00aaff;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  background: #252545;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+  color: #888;
+}
+
+/* Botão Submit */
+button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.3);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 1rem;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, #00e5ff 0%, #00aaff 100%);
+}
+
+button[type="submit"]:active {
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  nav {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  nav a {
+    font-size: 0.9rem;
+  }
+  
+  body > div:last-child {
+    margin: 1rem;
+    padding: 2rem;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    padding: 0.8rem;
+  }
+  
+  button[type="submit"] {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
