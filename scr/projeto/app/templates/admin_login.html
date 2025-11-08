@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Admin Login - Vai</title>
+</head>
+<body>
+    <!-- NavBar -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Login Cliente</a>
+            <a href="/admin/login">Login Admin</a>
+        </nav>
+    </div>
+
+    <!-- Login Container -->
+    <div class="cadastro-container">
+        <h1>Área de Administração</h1>
+        
+        <div class="cadastro-card">
+            <h2>Login do Administrador</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div style="background: {% if category == 'success' %}rgba(16, 185, 129, 0.2){% elif category == 'danger' %}rgba(255, 0, 64, 0.2){% else %}rgba(0, 212, 255, 0.2){% endif %}; border: 2px solid {% if category == 'success' %}#10b981{% elif category == 'danger' %}#ff0040{% else %}#00d4ff{% endif %}; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; color: #ffffff; text-align: center;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('main.admin_entrar') }}">
+                <div>
+                    <label for="email">Email do Administrador:</label>
+                    <input type="email" name="admin_email" id="email" required>
+                </div>
+                <div>
+                    <label for="senha">Senha:</label>
+                    <input type="password" name="admin_senha" id="senha" required>
+                </div>
+
+                <button type="submit">Entrar como Admin</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="/" style="color: #00d4ff; text-decoration: none; font-size: 0.95rem;">
+                    ← Voltar para Home
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

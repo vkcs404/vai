@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Meus Relatórios - Vai</title>
+</head>
+<body>
+    <!-- NavBar -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/escolher_relatorio">Relatórios</a>
+            <a href="/scaner">Scanner</a>
+            <a href="/minha_conta">Minha Conta</a>
+        </nav>
+    </div>
+
+    <div class="scanner-container">
+        <h1>Meus Relatórios</h1>
+        
+        <div class="relatorios-recentes-card">
+            <h3>Relatórios dos Últimos 30 Dias</h3>
+            <p class="info-text">Aqui você pode visualizar todos os seus relatórios emitidos nos últimos 30 dias</p>
+            
+            {% if relatorios %}
+                <div style="margin-top: 2rem;">
+                    {% for relatorio in relatorios %}
+                    <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid rgba(0, 170, 255, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h4 style="color: #00d4ff; margin-bottom: 0.5rem; font-size: 1.1rem;">
+                                    Relatório {{ relatorio.tipo|capitalize }}
+                                </h4>
+                                <p style="color: #b0b0b0; font-size: 0.9rem; margin: 0;">
+                                    Data: {{ relatorio.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
+                                </p>
+                                {% if relatorio.alvo %}
+                                <p style="color: #b0b0b0; font-size: 0.9rem; margin: 0.3rem 0 0 0;">
+                                    Alvo: {{ relatorio.alvo }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <a href="{{ url_for('main.visualizar_relatorio', relatorio_id=relatorio.id, tipo=relatorio.tipo) }}" 
+                                   style="display: inline-block; background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); color: #ffffff; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem;">
+                                    Visualizar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 3rem; color: #b0b0b0;">
+                    <p style="font-size: 1.1rem;">Você ainda não possui relatórios emitidos.</p>
+                    <a href="/scaner" style="display: inline-block; margin-top: 1rem; background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); color: #ffffff; text-decoration: none; padding: 1rem 2rem; border-radius: 50px; font-weight: 600;">
+                        Gerar Primeiro Relatório
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/scaner" style="color: #00d4ff; text-decoration: none; font-size: 0.95rem;">
+                ← Voltar ao Scanner
+            </a>
+        </div>
+    </div>
+</body>
+</html>

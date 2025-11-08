@@ -39,10 +39,10 @@ class RelatorioIntermediario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     conteudo = db.Column(db.Text, nullable=False)
     data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    client_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
 
-    def _repr_(sel):
-        return f'RelatorioIntermediario {self.id}>'
+    def __repr__(self):
+        return f'<RelatorioIntermediario {self.id}>'
 
 
 
@@ -55,7 +55,22 @@ class RelatorioAvancado(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     conteudo = db.Column(db.Text, nullable=False)
     data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    client_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)  #Aqui puxa a FK da tabela Cliente (relacao) - B
+    cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
 
     def __repr__(self):
-        return f'RelatorioAvancado {self.id}>'
+        return f'<RelatorioAvancado {self.id}>'
+
+
+# ######################################################################
+# MODELO ADMINISTRADOR
+# ######################################################################
+
+class Administrador(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    admin_nome = db.Column(db.String(80), nullable=False)
+    admin_email = db.Column(db.String(320), unique=True, nullable=False)
+    admin_senha = db.Column(db.String(128), nullable=False)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Administrador {self.admin_nome}>'
