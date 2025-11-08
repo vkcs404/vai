@@ -8,3 +8,4 @@ instance/
 
 # Outros arquivos comuns a serem ignorados (opcional, mas recomendado)
 
+scr/projeto/instance/

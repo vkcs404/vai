@@ -29,24 +29,55 @@ def selecionar_relatorio():
     tipo_relatorio = request.form.get('tipo_relatorio')
     if tipo_relatorio in ['basico', 'intermediario', 'avancado']:
         session['tipo_relatorio'] = tipo_relatorio
-        # Definir preços
+        # Definir preços e descrições
         precos = {
             'basico': '10,00',
             'intermediario': '15,00',
             'avancado': '20,00'
         }
+        descricoes = {
+            'basico': 'Indicado para pessoas com pouco conhecimento técnico em cibersegurança que desejam verificar se o site da empresa está seguro.',
+            'intermediario': 'Ideal para desenvolvedores que querem garantir que seus sites estejam protegidos, com um relatório que aponta falhas de segurança que devem ser mitigadas.',
+            'avancado': 'Voltado para usuários mais experientes que desejam automatizar a detecção de falhas de segurança e receber um relatório detalhado sobre a segurança do site.'
+        }
         session['preco_relatorio'] = precos[tipo_relatorio]
-        return redirect(url_for('main.pagamento'))
+        session['descricao_relatorio'] = descricoes[tipo_relatorio]
+        
+        # Check if user is logged in
+        if 'cliente_id' in session:
+            # User is logged in, go to payment
+            return redirect(url_for('main.pagamento'))
+        else:
+            # User not logged in, redirect to login
+            flash('Por favor, faça login ou cadastre-se para continuar.', 'info')
+            return redirect(url_for('main.login'))
     else:
         flash('Opção de relatório inválida.', 'danger')
         return redirect(url_for('main.escolher_relatorio'))
 
 @main_bp.route('/pagamento')
 def pagamento():
+    # Check if user is logged in
+    if 'cliente_id' not in session:
+        flash('Por favor, faça login para continuar com o pagamento.', 'warning')
+        return redirect(url_for('main.login'))
+    
     # Obter relatório selecionado da sessão
     tipo_relatorio = session.get('tipo_relatorio', None)
     preco_relatorio = session.get('preco_relatorio', None)
+    
+    if not tipo_relatorio:
+        flash('Por favor, selecione um tipo de relatório primeiro.', 'warning')
+        return redirect(url_for('main.escolher_relatorio'))
+    
     return render_template('pagamento.html', tipo_relatorio=tipo_relatorio, preco_relatorio=preco_relatorio)
+
+@main_bp.route('/confirmar_pagamento', methods=['POST'])
+def confirmar_pagamento():
+    # Mark payment as confirmed in session
+    session['pagamento_confirmado'] = True
+    flash('Pagamento confirmado com sucesso!', 'success')
+    return redirect(url_for('main.scaner'))
 
 
 # ... (outras rotas simples) ...
@@ -106,7 +137,14 @@ def cliente_entrar():
         if check_password_hash(cliente.cliente_senha, senha):
             session['cliente_id'] = cliente.id
             flash('Login realizado com sucesso!', 'success')
-            return redirect(url_for('main.scaner'))
+            
+            # Check if there's a pending report selection
+            if 'tipo_relatorio' in session and not session.get('pagamento_confirmado'):
+                # Redirect to payment
+                return redirect(url_for('main.pagamento'))
+            else:
+                # Redirect to scanner
+                return redirect(url_for('main.scaner'))
         else:
             flash('E-mail ou senha inválidos.', 'danger')
             return redirect(url_for('main.login'))
@@ -154,8 +192,17 @@ def scaner():
     # Passa o cliente inteiro para o template
     cliente = Cliente.query.get(session['cliente_id'])
     
-    # O template 'scaner.html' agora terá acesso ao 'cliente.nivel_acesso'
-    return render_template('scaner.html', cliente=cliente)
+    # Get report information from session
+    tipo_relatorio = session.get('tipo_relatorio', None)
+    preco_relatorio = session.get('preco_relatorio', None)
+    descricao_relatorio = session.get('descricao_relatorio', None)
+    
+    # O template 'scaner.html' agora terá acesso ao 'cliente.nivel_acesso' e report info
+    return render_template('scaner.html', 
+                         cliente=cliente,
+                         tipo_relatorio=tipo_relatorio,
+                         preco_relatorio=preco_relatorio,
+                         descricao_relatorio=descricao_relatorio)
 
 
 # --- ROTA POST para SCAN AVANÇADO (Sua ideia) ---
