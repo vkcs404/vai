@@ -2,5 +2,9 @@
 *.pyc
 __pycache__/
 
+# Database files
+*.db
+instance/
+
 # Outros arquivos comuns a serem ignorados (opcional, mas recomendado)
 

@@ -470,3 +470,328 @@ button[type="submit"]:active {
     font-size: 1rem;
   }
 }
+/* Estilos para a página de escolha de relatórios */
+.relatorios-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.relatorios-container h1 {
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #b0b0b0;
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+.relatorios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.relatorio-card {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 2px solid rgba(0, 170, 255, 0.3);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.relatorio-card:hover {
+  transform: translateY(-10px);
+  border-color: #00d4ff;
+  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+}
+
+.relatorio-card.destaque {
+  border-color: #00d4ff;
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+}
+
+.badge-popular {
+  position: absolute;
+  top: 20px;
+  right: -30px;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  color: #ffffff;
+  padding: 0.5rem 2.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transform: rotate(45deg);
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 153, 255, 0.3);
+}
+
+.relatorio-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.relatorio-header h2 {
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.preco {
+  font-size: 2.5rem;
+  color: #00d4ff;
+  font-weight: 700;
+}
+
+.relatorio-body {
+  flex-grow: 1;
+  margin-bottom: 2rem;
+}
+
+.descricao {
+  color: #e0e0e0;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.caracteristicas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.caracteristicas li {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  padding: 0.6rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.caracteristicas li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #00d4ff;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.relatorio-footer {
+  margin-top: auto;
+}
+
+.btn-selecionar {
+  width: 100%;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.3);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-selecionar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, #00e5ff 0%, #00aaff 100%);
+}
+
+.btn-selecionar:active {
+  transform: translateY(-1px);
+}
+
+/* Responsividade para os cards de relatórios */
+@media (max-width: 768px) {
+  .relatorios-container {
+    padding: 2rem 1rem;
+  }
+  
+  .relatorios-container h1 {
+    font-size: 2rem;
+  }
+  
+  .subtitulo {
+    font-size: 1rem;
+  }
+  
+  .relatorios-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .relatorio-card {
+    padding: 1.5rem;
+  }
+  
+  .relatorio-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .preco {
+    font-size: 2rem;
+  }
+}
+
+/* Estilos para a página de pagamento */
+.pagamento-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 170, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(0, 170, 255, 0.3);
+  text-align: center;
+}
+
+.pagamento-container h2 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.resumo-pedido {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.resumo-pedido h3 {
+  color: #00d4ff;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.item-pedido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.item-nome {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+}
+
+.item-preco {
+  color: #00d4ff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.total-pedido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.total-pedido span:first-child {
+  color: #ffffff;
+}
+
+.valor-total {
+  color: #00d4ff;
+  font-size: 1.5rem;
+}
+
+.mensagem-pagamento {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+}
+
+.mensagem-secundaria {
+  color: #b0b0b0;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.acoes-pagamento {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.acoes-pagamento button {
+  width: 100%;
+  background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.3);
+}
+
+.acoes-pagamento button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(135deg, #00e5ff 0%, #00aaff 100%);
+}
+
+.acoes-pagamento button a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.btn-secundario {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 2px solid #00aaff !important;
+}
+
+.btn-secundario:hover {
+  background: rgba(0, 170, 255, 0.1) !important;
+}
+
+/* Responsividade para página de pagamento */
+@media (max-width: 768px) {
+  .pagamento-container {
+    margin: 1.5rem 1rem;
+    padding: 2rem;
+  }
+  
+  .pagamento-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .mensagem-pagamento {
+    font-size: 1.1rem;
+  }
+}

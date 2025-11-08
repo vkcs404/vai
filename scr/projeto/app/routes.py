@@ -20,9 +20,33 @@ def cadastro():
 def login():
     return render_template('login.html')
 
+@main_bp.route('/escolher_relatorio')
+def escolher_relatorio():
+    return render_template('escolher_relatorio.html')
+
+@main_bp.route('/selecionar_relatorio', methods=['POST'])
+def selecionar_relatorio():
+    tipo_relatorio = request.form.get('tipo_relatorio')
+    if tipo_relatorio in ['basico', 'intermediario', 'avancado']:
+        session['tipo_relatorio'] = tipo_relatorio
+        # Definir preços
+        precos = {
+            'basico': '10,00',
+            'intermediario': '15,00',
+            'avancado': '20,00'
+        }
+        session['preco_relatorio'] = precos[tipo_relatorio]
+        return redirect(url_for('main.pagamento'))
+    else:
+        flash('Opção de relatório inválida.', 'danger')
+        return redirect(url_for('main.escolher_relatorio'))
+
 @main_bp.route('/pagamento')
 def pagamento():
-    return render_template('pagamento.html')
+    # Obter relatório selecionado da sessão
+    tipo_relatorio = session.get('tipo_relatorio', None)
+    preco_relatorio = session.get('preco_relatorio', None)
+    return render_template('pagamento.html', tipo_relatorio=tipo_relatorio, preco_relatorio=preco_relatorio)
 
 
 # ... (outras rotas simples) ...

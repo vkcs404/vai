@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Pagamento - Vai</title>
 </head>
 <body>
     <div>
@@ -14,15 +15,38 @@
         </nav>
     </div>
 
-    <div>
-        <h2>Obrigado por fazer o pagamento!</h2>
-        <p>
-            Agora voce pode fazer sua conta
+    <div class="pagamento-container">
+        <h2>Confirmação de Pagamento</h2>
+        
+        {% if tipo_relatorio %}
+        <div class="resumo-pedido">
+            <h3>Resumo do Pedido</h3>
+            <div class="item-pedido">
+                <span class="item-nome">Relatório {{ tipo_relatorio.title() }}</span>
+                <span class="item-preco">R$ {{ preco_relatorio }}</span>
+            </div>
+            <div class="total-pedido">
+                <span>Total:</span>
+                <span class="valor-total">R$ {{ preco_relatorio }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <p class="mensagem-pagamento">
+            Obrigado por fazer o pagamento!
+        </p>
+        <p class="mensagem-secundaria">
+            Agora você pode criar sua conta para acessar seu relatório.
         </p>
 
-        <button>
-            <a href="/cadastro">Criar Conta</a>
-        </button>
+        <div class="acoes-pagamento">
+            <button>
+                <a href="/cadastro">Criar Conta</a>
+            </button>
+            <button class="btn-secundario">
+                <a href="/escolher_relatorio">Escolher Outro Relatório</a>
+            </button>
+        </div>
     </div>
 </body>
 </html>
