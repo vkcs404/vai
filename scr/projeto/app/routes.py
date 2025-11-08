@@ -5,6 +5,9 @@ from . import db
 from .ferramentas.scanner_avancado import rodar_scan_avancado
 from .ferramentas.scanner_intermediario import rodar_scan_intermediario
 from .ferramentas.scanner_basico import rodar_scan_basico
+from fpdf import FPDF
+from flask import Response
+
 main_bp = Blueprint('main', __name__)
 
 # ... (todas as suas outras rotas como index, cadastro, etc. continuam iguais) ...
@@ -174,153 +177,161 @@ def alternar_status(cliente_id):
     return redirect(url_for('main.listar_clientes'))
 
 
+# Em app/routes.py
+
 @main_bp.route('/scaner')
 def scaner():
-    # Proteger esta rota: se o usuário não estiver logado, redireciona para o login.
+    # Proteger esta rota
     if 'cliente_id' not in session:
         flash('Você precisa estar logado para acessar esta página.', 'warning')
         return redirect(url_for('main.login'))
     
-    # Passa o cliente inteiro para o template
+    # Busca o cliente (para o template saber o nível de acesso)
     cliente = Cliente.query.get(session['cliente_id'])
     
-    # Get report information from session
-    tipo_relatorio = session.get('tipo_relatorio', None)
-    preco_relatorio = session.get('preco_relatorio', None)
-    descricao_relatorio = session.get('descricao_relatorio', None)
-    
-    # O template 'scaner.html' agora terá acesso ao 'cliente.nivel_acesso' e report info
-    return render_template('scaner.html', 
-                         cliente=cliente,
-                         tipo_relatorio=tipo_relatorio,
-                         preco_relatorio=preco_relatorio,
-                         descricao_relatorio=descricao_relatorio)
+    # Renderiza o template, passando APENAS o cliente
+    return render_template('scaner.html', cliente=cliente)
 
 
-# --- ROTA POST para SCAN AVANÇADO (Sua ideia) ---
-@main_bp.route('/executar_scanner_avancado', methods=['POST'])
-def executar_scanner_avancado():
-    
-    # --- Passo 1: Checar Login ---
-    if 'cliente_id' not in session:
-        flash('Sessão expirada. Faça login novamente.', 'danger')
-        return redirect(url_for('main.login'))
+# Em app/routes.py
 
-    # --- Passo 2: Checar Permissão (Segurança) ---
-    cliente = Cliente.query.get(session['cliente_id'])
-    if cliente.nivel_acesso != 'avancado':
-        flash('Permissão negada. Você não tem acesso ao scanner avançado.', 'danger')
-        return redirect(url_for('main.scaner'))
-
-    # --- Passo 3: Executar e Salvar ---
-    alvo = request.form.get('alvo')
-    if not alvo:
-        flash('Alvo (domínio) não fornecido.', 'warning')
-        return redirect(url_for('main.scaner'))
-
-    try:
-        # Chama a função do seu arquivo .py
-        conteudo_do_relatorio = rodar_scan_avancado(alvo)
-
-        # Salva no modelo CORRETO (RelatorioAvancado)
-        novo_relatorio = RelatorioAvancado(
-            conteudo_tecnico=conteudo_do_relatorio,
-            cliente_id=cliente.id
-        )
-        
-        db.session.add(novo_relatorio)
-        db.session.commit()
-        
-        flash('Scan avançado concluído e relatório salvo!', 'success')
-
-    except Exception as e:
-        flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
-
-    return redirect(url_for('main.scaner'))
-
-
-# --- ROTA POST para SCAN INTERMEDIÁRIO
-
-@main_bp.route('/executar_scanner_intermediario', methods=['POST'])
-def executar_scanner_intermediario():
-    
-    # --- Passo 1: Checar Login ---
-    if 'cliente_id' not in session:
-        flash('Sessão expirada. Faça login novamente.', 'danger')
-        return redirect(url_for('main.login'))
-
-    # --- Passo 2: Checar Permissão (Segurança) ---
-    cliente = Cliente.query.get(session['cliente_id'])
-    if cliente.nivel_acesso != 'avancado':
-        flash('Permissão negada. Você não tem acesso ao scanner avançado.', 'danger')
-        return redirect(url_for('main.scaner'))
-
-    # --- Passo 3: Executar e Salvar ---
-    alvo = request.form.get('alvo')
-    if not alvo:
-        flash('Alvo (domínio) não fornecido.', 'warning')
-        return redirect(url_for('main.scaner'))
-
-    try:
-        # Chama a função do seu arquivo .py
-        conteudo_do_relatorio = rodar_scan_avancado(alvo)
-
-        # Salva no modelo CORRETO (RelatorioAvancado)
-        novo_relatorio = RelatorioAvancado(
-            conteudo_tecnico=conteudo_do_relatorio,
-            cliente_id=cliente.id
-        )
-        
-        db.session.add(novo_relatorio)
-        db.session.commit()
-        
-        flash('Scan avançado concluído e relatório salvo!', 'success')
-
-    except Exception as e:
-        flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
-
-    return redirect(url_for('main.scaner'))
-
-#routa basica#
+# --- ROTA POST para SCAN BÁSICO (CORRIGIDA) ---
 @main_bp.route('/executar_scanner_basico', methods=['POST'])
 def executar_scanner_basico():
     
-    # --- Passo 1: Checar Login ---
     if 'cliente_id' not in session:
         flash('Sessão expirada. Faça login novamente.', 'danger')
         return redirect(url_for('main.login'))
 
-    # --- Passo 2: Checar Permissão (Segurança) ---
     cliente = Cliente.query.get(session['cliente_id'])
-    if cliente.nivel_acesso != 'avancado':
-        flash('Permissão negada. Você não tem acesso ao scanner avançado.', 'danger')
+    
+    # --- CORREÇÃO DE PERMISSÃO ---
+    if cliente.nivel_acesso != 'basico':
+        flash('Permissão negada. Você não tem acesso ao scanner básico.', 'danger')
         return redirect(url_for('main.scaner'))
 
-    # --- Passo 3: Executar e Salvar ---
     alvo = request.form.get('alvo')
     if not alvo:
         flash('Alvo (domínio) não fornecido.', 'warning')
         return redirect(url_for('main.scaner'))
 
     try:
-        # Chama a função do seu arquivo .py
-        conteudo_do_relatorio = rodar_scan_avancado(alvo)
+        # --- CORREÇÃO DE FUNÇÃO ---
+        conteudo_do_relatorio = rodar_scan_basico(alvo)
 
-        # Salva no modelo CORRETO (RelatorioAvancado)
-        novo_relatorio = RelatorioAvancado(
-            conteudo_tecnico=conteudo_do_relatorio,
+        # --- CORREÇÃO DE MODELO ---
+        novo_relatorio = RelatorioBasico(
+            conteudo=conteudo_do_relatorio,
             cliente_id=cliente.id
         )
         
         db.session.add(novo_relatorio)
         db.session.commit()
         
-        flash('Scan avançado concluído e relatório salvo!', 'success')
+        flash('Scan básico concluído!', 'success')
+        
+        # --- CORREÇÃO DE REDIRECT ---
+        return redirect(url_for('main.visualizar_relatorio', 
+                                relatorio_id=novo_relatorio.id, 
+                                tipo='basico'))
 
     except Exception as e:
+        # !!!!! MUDANÇA IMPORTANTE !!!!!
+        # Isso vai nos mostrar o erro no terminal!
+        print(f"ERRO NO SCAN BÁSICO: {e}") 
         flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
+        return redirect(url_for('main.scaner'))
 
-    return redirect(url_for('main.scaner'))
+
+# --- ROTA POST para SCAN INTERMEDIÁRIO (CORRIGIDA) ---
+@main_bp.route('/executar_scanner_intermediario', methods=['POST'])
+def executar_scanner_intermediario():
+    
+    if 'cliente_id' not in session:
+        flash('Sessão expirada. Faça login novamente.', 'danger')
+        return redirect(url_for('main.login'))
+
+    cliente = Cliente.query.get(session['cliente_id'])
+    
+    # --- CORREÇÃO DE PERMISSÃO ---
+    if cliente.nivel_acesso != 'intermediario':
+        flash('Permissão negada. Você não tem acesso ao scanner intermediário.', 'danger')
+        return redirect(url_for('main.scaner'))
+
+    alvo = request.form.get('alvo')
+    if not alvo:
+        flash('Alvo (domínio) não fornecido.', 'warning')
+        return redirect(url_for('main.scaner'))
+
+    try:
+        # --- CORREÇÃO DE FUNÇÃO ---
+        conteudo_do_relatorio = rodar_scan_intermediario(alvo)
+
+        # --- CORREÇÃO DE MODELO ---
+        novo_relatorio = RelatorioIntermediario(
+            conteudo=conteudo_do_relatorio,
+            cliente_id=cliente.id
+        )
+        
+        db.session.add(novo_relatorio)
+        db.session.commit()
+        
+        flash('Scan intermediário concluído!', 'success')
+        
+        # --- CORREÇÃO DE REDIRECT ---
+        return redirect(url_for('main.visualizar_relatorio', 
+                                relatorio_id=novo_relatorio.id, 
+                                tipo='intermediario'))
+
+    except Exception as e:
+        # !!!!! MUDANÇA IMPORTANTE !!!!!
+        print(f"ERRO NO SCAN INTERMEDIÁRIO: {e}")
+        flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
+        return redirect(url_for('main.scaner'))
+
+
+# --- ROTA POST para SCAN AVANÇADO (CORRIGIDA) ---
+@main_bp.route('/executar_scanner_avancado', methods=['POST'])
+def executar_scanner_avancado():
+    
+    if 'cliente_id' not in session:
+        flash('Sessão expirada. Faça login novamente.', 'danger')
+        return redirect(url_for('main.login'))
+
+    cliente = Cliente.query.get(session['cliente_id'])
+    
+    # --- PERMISSÃO CORRETA ---
+    if cliente.nivel_acesso != 'avancado':
+        flash('Permissão negada. Você não tem acesso ao scanner avançado.', 'danger')
+        return redirect(url_for('main.scaner'))
+
+    alvo = request.form.get('alvo')
+    if not alvo:
+        flash('Alvo (domínio) não fornecido.', 'warning')
+        return redirect(url_for('main.scaner'))
+
+    try:
+        conteudo_do_relatorio = rodar_scan_avancado(alvo)
+
+        novo_relatorio = RelatorioAvancado(
+            conteudo=conteudo_do_relatorio, # Usando 'conteudo'
+            cliente_id=cliente.id
+        )
+        
+        db.session.add(novo_relatorio)
+        db.session.commit()
+        
+        flash('Scan avançado concluído!', 'success')
+        
+        return redirect(url_for('main.visualizar_relatorio', 
+                                relatorio_id=novo_relatorio.id, 
+                                tipo='avancado'))
+
+    except Exception as e:
+        # !!!!! MUDANÇA IMPORTANTE !!!!!
+        print(f"ERRO NO SCAN AVANÇADO: {e}")
+        flash(f'Ocorreu um erro durante o scan: {e}', 'danger')
+        return redirect(url_for('main.scaner'))
 
 
     # Rota para Alterar o Nível de Acesso do Cliente
@@ -563,3 +574,53 @@ def admin_logout():
     flash('Você saiu da área administrativa.', 'success')
     return redirect(url_for('main.index'))
     return redirect(url_for('main.listar_clientes'))
+
+
+
+# Em app/routes.py
+
+@main_bp.route('/download_relatorio/<int:relatorio_id>/<tipo>')
+def download_relatorio(relatorio_id, tipo):
+    if 'cliente_id' not in session:
+        flash('Você precisa estar logado para baixar relatórios.', 'warning')
+        return redirect(url_for('main.login'))
+
+    cliente = Cliente.query.get(session['cliente_id'])
+
+    # --- LÓGICA DE BUSCA SIMPLIFICADA ---
+    conteudo = ""
+    if tipo == 'basico':
+        relatorio = RelatorioBasico.query.get_or_404(relatorio_id)
+        conteudo = relatorio.conteudo
+    elif tipo == 'intermediario':
+        relatorio = RelatorioIntermediario.query.get_or_404(relatorio_id)
+        conteudo = relatorio.conteudo
+    elif tipo == 'avancado':
+        relatorio = RelatorioAvancado.query.get_or_404(relatorio_id)
+        conteudo = relatorio.conteudo # <-- CORRIGIDO
+    else:
+        flash('Tipo de relatório inválido.', 'danger')
+        return redirect(url_for('main.relatorios_recentes'))
+
+    # --- O RESTO DO SEU CÓDIGO ESTÁ PERFEITO ---
+    if relatorio.cliente_id != cliente.id:
+        flash('Você não tem permissão para baixar este relatório.', 'danger')
+        return redirect(url_for('main.relatorios_recentes'))
+
+    # GERA O PDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font('Arial', '', 12)
+    pdf.cell(0, 10, f'Relatorio Tecnico - {tipo.title()}', ln=True, align='C')
+    pdf.cell(0, 10, f"Gerado em: {relatorio.data_criacao.strftime('%d/%m/%Y')}", ln=True, align='C')
+    pdf.ln(10)
+    pdf.multi_cell(0, 5, conteudo)
+    pdf_output = pdf.output() 
+    
+    return Response(
+        pdf_output,
+        mimetype='application/pdf',
+        headers={
+            'Content-Disposition': f'attachment; filename="relatorio_{tipo}_{relatorio_id}.pdf"'
+        }
+    )

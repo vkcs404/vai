@@ -7,19 +7,17 @@
     <title>Admin - Gerenciar Clientes - Vai</title>
 </head>
 <body>
-    <!-- NavBar -->
     <div>
         <nav>
             <a href="/">Home</a>
             <a href="/admin/dashboard">Dashboard Admin</a>
-            <a href="/admin/logout">Sair</a>
+            <a href="{{ url_for('main.admin_logout') }}">Sair</a>
         </nav>
     </div>
 
     <div class="scanner-container">
         <h1>Painel do Administrador</h1>
         
-        <!-- Alerts -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -30,32 +28,30 @@
             {% endif %}
         {% endwith %}
 
-        <!-- Gerenciar Clientes -->
         <div class="scanner-form-card">
             <h3>Gerenciar Clientes</h3>
             
             {% if clientes %}
-            <div style="overflow-x: auto; margin-top: 1.5rem;">
-                <table style="width: 100%; border-collapse: collapse; color: #ffffff;">
+            <div class="admin-table-container">
+                
+                <table class="admin-table">
                     <thead>
-                        <tr style="background: rgba(0, 212, 255, 0.1); border-bottom: 2px solid #00d4ff;">
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">ID</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Nome</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Email</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Status</th>
-                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Nível de Acesso</th>
-                            <th style="padding: 1rem; text-align: center; font-weight: 600; color: #00d4ff;">Ações</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Nível de Acesso</th>
+                            <th style="text-align: center;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for cliente in clientes %}
-                        <tr style="border-bottom: 1px solid rgba(0, 170, 255, 0.2); transition: all 0.3s ease;" 
-                            onmouseover="this.style.background='rgba(0, 212, 255, 0.05)'" 
-                            onmouseout="this.style.background='transparent'">
-                            <td style="padding: 1rem; color: #e0e0e0;">{{ cliente.id }}</td>
-                            <td style="padding: 1rem; color: #e0e0e0;">{{ cliente.cliente_nome }}</td>
-                            <td style="padding: 1rem; color: #e0e0e0;">{{ cliente.cliente_email }}</td>
-                            <td style="padding: 1rem;">
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.cliente_nome }}</td>
+                            <td>{{ cliente.cliente_email }}</td>
+                            <td>
                                 <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; 
                                     {% if cliente.cliente_status == 'ativo' %}
                                         background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981;
@@ -65,27 +61,26 @@
                                     {{ cliente.cliente_status|capitalize }}
                                 </span>
                             </td>
-                            <td style="padding: 1rem;">
-                                <form action="{{ url_for('main.alterar_nivel_acesso', cliente_id=cliente.id) }}" method="POST" style="display: inline-flex; gap: 0.5rem; align-items: center;">
-                                    <select name="novo_nivel" required style="padding: 0.5rem; background: #1a1a2e; border: 2px solid #00aaff; border-radius: 8px; color: #ffffff; font-size: 0.9rem;">
+                            <td>
+                                <form action="{{ url_for('main.alterar_nivel_acesso', cliente_id=cliente.id) }}" method="POST" style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <select name="novo_nivel" required class="form-control" style="padding: 0.5rem; font-size: 0.9rem; width: auto;">
                                         <option value="basico" {% if cliente.nivel_acesso == 'basico' %}selected{% endif %}>Básico</option>
                                         <option value="intermediario" {% if cliente.nivel_acesso == 'intermediario' %}selected{% endif %}>Intermediário</option>
                                         <option value="avancado" {% if cliente.nivel_acesso == 'avancado' %}selected{% endif %}>Avançado</option>
                                     </select>
-                                    <button type="submit" style="background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%); border: none; border-radius: 8px; padding: 0.5rem 1rem; color: #ffffff; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                    <button type="submit" class="btn-submit" style="width: auto; padding: 0.5rem 1rem; font-size: 0.85rem; margin-top: 0;">
                                         Alterar
                                     </button>
                                 </form>
                             </td>
-                            <td style="padding: 1rem; text-align: center;">
+                            <td style="text-align: center;">
                                 <form action="{{ url_for('main.alternar_status', cliente_id=cliente.id) }}" method="POST" style="display: inline;">
-                                    <button type="submit" style="
+                                    <button type="submit" class="btn-submit" style="width: auto; padding: 0.5rem 1rem; font-size: 0.85rem; margin-top: 0;
                                         {% if cliente.cliente_status == 'ativo' %}
                                             background: rgba(255, 0, 64, 0.2); border: 2px solid #ff0040; color: #ff0040;
                                         {% else %}
                                             background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; color: #10b981;
-                                        {% endif %}
-                                        border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease;">
+                                        {% endif %}">
                                         {% if cliente.cliente_status == 'ativo' %}
                                             Desativar
                                         {% else %}
@@ -106,7 +101,6 @@
             {% endif %}
         </div>
 
-        <!-- Estatísticas do Sistema -->
         <div class="relatorio-info-card">
             <h2>Estatísticas do Sistema</h2>
             <div class="info-grid">
