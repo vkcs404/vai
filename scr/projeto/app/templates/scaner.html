@@ -1,46 +1,91 @@
-<div class="container">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Scanner - Vai</title>
+</head>
+<body>
+    <!-- NavBar -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/escolher_relatorio">Relatórios</a>
+            <a href="/scaner">Scanner</a>
+        </nav>
+    </div>
 
-    <h2>Scanner Nível: {{ cliente.nivel_acesso.title() }}</h2>
+    <div class="scanner-container">
+        <h1>Scanner de Segurança</h1>
+        
+        {% if tipo_relatorio %}
+        <!-- Informações do Relatório Selecionado -->
+        <div class="relatorio-info-card">
+            <h2>Relatório Selecionado: {{ tipo_relatorio.title() }}</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Tipo:</span>
+                    <span class="info-value">{{ tipo_relatorio.title() }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Valor Pago:</span>
+                    <span class="info-value">R$ {{ preco_relatorio }}</span>
+                </div>
+            </div>
+            <div class="descricao-relatorio">
+                <p>{{ descricao_relatorio }}</p>
+            </div>
+        </div>
+        {% endif %}
 
-    <p>Insira o domínio (ex: google.com) e escolha o nível de scan desejado:</p>
+        <!-- Formulário de Scanner -->
+        <div class="scanner-form-card">
+            <h3>Inserir URL para Análise</h3>
+            <p class="instrucoes">Digite a URL do site que você deseja analisar</p>
+            
+            <form id="scanner-form" method="POST">
+                <div class="input-group">
+                    <label for="alvo">URL do Site:</label>
+                    <input type="text" class="form-control" id="alvo" name="alvo" 
+                           placeholder="exemplo: seudominio.com" required>
+                </div>
 
-    <form id="scanner-form" method="POST">
-        <div class="mb-3">
-            <label for="alvo" class="form-label">Domínio Alvo:</label>
-            <input type="text" class="form-control" id="alvo" name="alvo" placeholder="ex: seudominio.com" required>
+                <div class="scanner-buttons">
+                    <button type="submit" class="btn-scanner btn-basico"
+                        data-url="{{ url_for('main.executar_scanner_basico') }}">
+                        Iniciar Scan Básico
+                    </button>
+
+                    {% if cliente.nivel_acesso in ['intermediario', 'avancado'] %}
+                    <button type="submit" class="btn-scanner btn-intermediario"
+                        data-url="{{ url_for('main.executar_scanner_intermediario') }}">
+                        Iniciar Scan Intermediário
+                    </button>
+                    {% endif %}
+
+                    {% if cliente.nivel_acesso == 'avancado' %}
+                    <button type="submit" class="btn-scanner btn-avancado"
+                        data-url="{{ url_for('main.executar_scanner_avancado') }}">
+                        Iniciar Scan Avançado
+                    </button>
+                    {% endif %}
+                </div>
+            </form>
         </div>
 
-        <div class="d-grid gap-2 d-md-block mb-4">
-
-            <button type="submit" class="btn btn-info js-scanner-btn"
-                data-url="{{ url_for('main.executar_scanner_basico') }}">
-                Iniciar Scan Básico
-            </button>
-
-            {% if cliente.nivel_acesso in ['intermediario', 'avancado'] %}
-            <button type="submit" class="btn btn-warning js-scanner-btn"
-                data-url="{{ url_for('main.executar_scanner_intermediario') }}">
-                Iniciar Scan Intermediário
-            </button>
-            {% endif %}
-
-            {% if cliente.nivel_acesso == 'avancado' %}
-            <button type="submit" class="btn btn-danger js-scanner-btn"
-                data-url="{{ url_for('main.executar_scanner_avancado') }}">
-                Iniciar Scan Avançado
-            </button>
-            {% endif %}
+        <!-- Seção de Relatórios Recentes -->
+        <div class="relatorios-recentes-card">
+            <h3>Seus Relatórios Recentes</h3>
+            <p class="info-text">Últimos 30 dias</p>
+            <!-- Aqui você pode adicionar a lista de relatórios quando implementar -->
         </div>
-    </form>
-
-    <hr>
-
-    <h3>Seus Relatórios Recentes (Últimos 30 dias):</h3>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('scanner-form');
-            const buttons = document.querySelectorAll('.js-scanner-btn');
+            const buttons = document.querySelectorAll('.btn-scanner');
 
             buttons.forEach(button => {
                 button.addEventListener('click', function (event) {
@@ -57,4 +102,5 @@
             });
         });
     </script>
-</div>
+</body>
+</html>

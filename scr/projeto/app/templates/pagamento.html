@@ -36,13 +36,15 @@
             Obrigado por fazer o pagamento!
         </p>
         <p class="mensagem-secundaria">
-            Agora você pode criar sua conta para acessar seu relatório.
+            Após confirmar o pagamento, você será redirecionado para a página de scanner.
         </p>
 
         <div class="acoes-pagamento">
-            <button>
-                <a href="/cadastro">Criar Conta</a>
-            </button>
+            <form method="POST" action="/confirmar_pagamento">
+                <button type="submit">
+                    Confirmar Pagamento e Ir para Scanner
+                </button>
+            </form>
             <button class="btn-secundario">
                 <a href="/escolher_relatorio">Escolher Outro Relatório</a>
             </button>
