@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Admin - Gerenciar Clientes - Vai</title>
+</head>
+<body>
+    <!-- NavBar -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/admin/dashboard">Dashboard Admin</a>
+            <a href="/admin/logout">Sair</a>
+        </nav>
+    </div>
+
+    <div class="scanner-container">
+        <h1>Painel do Administrador</h1>
+        
+        <!-- Alerts -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="background: {% if category == 'success' %}rgba(16, 185, 129, 0.2){% elif category == 'danger' %}rgba(255, 0, 64, 0.2){% else %}rgba(0, 212, 255, 0.2){% endif %}; border: 2px solid {% if category == 'success' %}#10b981{% elif category == 'danger' %}#ff0040{% else %}#00d4ff{% endif %}; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; color: #ffffff;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Gerenciar Clientes -->
+        <div class="scanner-form-card">
+            <h3>Gerenciar Clientes</h3>
+            
+            {% if clientes %}
+            <div style="overflow-x: auto; margin-top: 1.5rem;">
+                <table style="width: 100%; border-collapse: collapse; color: #ffffff;">
+                    <thead>
+                        <tr style="background: rgba(0, 212, 255, 0.1); border-bottom: 2px solid #00d4ff;">
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">ID</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Nome</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Email</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Status</th>
+                            <th style="padding: 1rem; text-align: left; font-weight: 600; color: #00d4ff;">Nível de Acesso</th>
+                            <th style="padding: 1rem; text-align: center; font-weight: 600; color: #00d4ff;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr style="border-bottom: 1px solid rgba(0, 170, 255, 0.2); transition: all 0.3s ease;" 
+                            onmouseover="this.style.background='rgba(0, 212, 255, 0.05)'" 
+                            onmouseout="this.style.background='transparent'">
+                            <td style="padding: 1rem; color: #e0e0e0;">{{ cliente.id }}</td>
+                            <td style="padding: 1rem; color: #e0e0e0;">{{ cliente.cliente_nome }}</td>
+                            <td style="padding: 1rem; color: #e0e0e0;">{{ cliente.cliente_email }}</td>
+                            <td style="padding: 1rem;">
+                                <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; 
+                                    {% if cliente.cliente_status == 'ativo' %}
+                                        background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981;
+                                    {% else %}
+                                        background: rgba(255, 0, 64, 0.2); color: #ff0040; border: 1px solid #ff0040;
+                                    {% endif %}">
+                                    {{ cliente.cliente_status|capitalize }}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <form action="{{ url_for('main.alterar_nivel_acesso', cliente_id=cliente.id) }}" method="POST" style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                                    <select name="novo_nivel" required style="padding: 0.5rem; background: #1a1a2e; border: 2px solid #00aaff; border-radius: 8px; color: #ffffff; font-size: 0.9rem;">
+                                        <option value="basico" {% if cliente.nivel_acesso == 'basico' %}selected{% endif %}>Básico</option>
+                                        <option value="intermediario" {% if cliente.nivel_acesso == 'intermediario' %}selected{% endif %}>Intermediário</option>
+                                        <option value="avancado" {% if cliente.nivel_acesso == 'avancado' %}selected{% endif %}>Avançado</option>
+                                    </select>
+                                    <button type="submit" style="background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%); border: none; border-radius: 8px; padding: 0.5rem 1rem; color: #ffffff; font-weight: 600; cursor: pointer; font-size: 0.85rem;">
+                                        Alterar
+                                    </button>
+                                </form>
+                            </td>
+                            <td style="padding: 1rem; text-align: center;">
+                                <form action="{{ url_for('main.alternar_status', cliente_id=cliente.id) }}" method="POST" style="display: inline;">
+                                    <button type="submit" style="
+                                        {% if cliente.cliente_status == 'ativo' %}
+                                            background: rgba(255, 0, 64, 0.2); border: 2px solid #ff0040; color: #ff0040;
+                                        {% else %}
+                                            background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; color: #10b981;
+                                        {% endif %}
+                                        border-radius: 8px; padding: 0.5rem 1rem; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease;">
+                                        {% if cliente.cliente_status == 'ativo' %}
+                                            Desativar
+                                        {% else %}
+                                            Ativar
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div style="text-align: center; padding: 3rem; color: #b0b0b0;">
+                    <p style="font-size: 1.1rem;">Nenhum cliente cadastrado no sistema.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Estatísticas do Sistema -->
+        <div class="relatorio-info-card">
+            <h2>Estatísticas do Sistema</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Total de Clientes:</span>
+                    <span class="info-value">{{ clientes|length }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Clientes Ativos:</span>
+                    <span class="info-value">{{ clientes|selectattr('cliente_status', 'equalto', 'ativo')|list|length }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Clientes Inativos:</span>
+                    <span class="info-value">{{ clientes|selectattr('cliente_status', 'equalto', 'inativo')|list|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

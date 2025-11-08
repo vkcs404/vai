@@ -4,32 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login no Vai</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Area de Login</h1>
+    <!-- NavBar -->
     <div>
         <nav>
             <a href="/">Home</a>
-            <a href="/login">Login</a>
+            <a href="/login">Entrar</a>
             <a href="/cadastro">Cadastrar</a>
         </nav>
     </div>
 
-    <div class="form-container"> <h2>Entre</h2>
+    <!-- Login Container -->
+    <div class="cadastro-container">
+        <h1>Área de Login</h1>
+        
+        <div class="cadastro-card">
+            <h2>Entre</h2>
 
-        <form method="POST" action="{{ url_for('main.cliente_entrar') }}">
-            <div>
-                <label for="email">Email: </label>
-                <input type="text" name="cliente_email" id="email" required>
-            </div>
-            <div>
-                <label for="senha">Senha: </label>
-                <input type="password" name="cliente_senha" id="senha" required>
-            </div>
+            <form method="POST" action="{{ url_for('main.cliente_entrar') }}">
+                <div>
+                    <label for="email">Email:</label>
+                    <input type="email" name="cliente_email" id="email" required>
+                </div>
+                <div>
+                    <label for="senha">Senha:</label>
+                    <input type="password" name="cliente_senha" id="senha" required>
+                </div>
 
                 <button type="submit">Entrar</button>
-        </form>
+            </form>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="/escolher_relatorio" style="color: #00d4ff; text-decoration: none; font-size: 0.95rem;">
+                    ← Voltar para escolher relatório
+                </a>
+            </div>
+        </div>
     </div>
 </body>
 </html>

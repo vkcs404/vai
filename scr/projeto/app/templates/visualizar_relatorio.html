@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Visualizar Relatório - Vai</title>
+</head>
+<body>
+    <!-- NavBar -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/escolher_relatorio">Relatórios</a>
+            <a href="/scaner">Scanner</a>
+            <a href="/minha_conta">Minha Conta</a>
+        </nav>
+    </div>
+
+    <div class="scanner-container">
+        <h1>Relatório {{ tipo|capitalize }}</h1>
+        
+        <!-- Informações do Relatório -->
+        <div class="relatorio-info-card">
+            <h2>Detalhes do Relatório</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Tipo:</span>
+                    <span class="info-value">{{ tipo|capitalize }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Data de Criação:</span>
+                    <span class="info-value">{{ relatorio.data_criacao.strftime('%d/%m/%Y às %H:%M') }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ID do Relatório:</span>
+                    <span class="info-value">#{{ relatorio.id }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo do Relatório -->
+        <div class="scanner-form-card">
+            <h3>Conteúdo do Relatório</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 2rem; margin-top: 1.5rem; border: 1px solid rgba(0, 170, 255, 0.2);">
+                <pre style="color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; margin: 0; font-family: 'Courier New', monospace;">{{ relatorio.conteudo }}</pre>
+            </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="relatorios-recentes-card">
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/relatorios_recentes" style="display: inline-block; background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); color: #ffffff; text-decoration: none; padding: 1rem 2rem; border-radius: 50px; font-weight: 600;">
+                    ← Voltar aos Relatórios
+                </a>
+                <a href="/scaner" style="display: inline-block; background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%); color: #ffffff; text-decoration: none; padding: 1rem 2rem; border-radius: 50px; font-weight: 600;">
+                    Gerar Novo Relatório
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

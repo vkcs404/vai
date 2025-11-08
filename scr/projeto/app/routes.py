@@ -153,7 +153,10 @@ def cliente_entrar():
 
 @main_bp.route('/admin/alternar_status/<int:cliente_id>', methods=['POST'])
 def alternar_status(cliente_id):
- 
+    # Verificar se é admin
+    if 'admin_id' not in session or not session.get('is_admin'):
+        flash('Acesso restrito a administradores.', 'danger')
+        return redirect(url_for('main.admin_login'))
 
     cliente = Cliente.query.get_or_404(cliente_id)
 
@@ -168,18 +171,7 @@ def alternar_status(cliente_id):
     db.session.commit()
     
     # Redireciona de volta para a página de onde o admin veio (ex: uma lista de clientes)
-    return redirect(url_for('main.listar_clientes')) # Supondo que você crie uma rota '/listar_clientes'
-
-
-# Exemplo de uma rota para listar clientes (para o admin usar)
-@main_bp.route('/listar_clientes')
-def listar_clientes():
-    # Lógica de segurança para garantir que só admins vejam isso
-    clientes = Cliente.query.all()
-    return render_template('listar_clientes.html', clientes=clientes)
-    
-
-
+    return redirect(url_for('main.listar_clientes'))
 
 
 @main_bp.route('/scaner')
@@ -334,20 +326,10 @@ def executar_scanner_basico():
     # Rota para Alterar o Nível de Acesso do Cliente
 @main_bp.route('/admin/alterar_nivel/<int:cliente_id>', methods=['POST'])
 def alterar_nivel_acesso(cliente_id):
-    # --- Passo 1: Checar se o USUÁRIO LOGADO é um ADMIN ---
-    # NOTA: Você deve implementar a lógica de 'admin' primeiro. 
-    # Por exemplo, checar se session['nivel_acesso'] é 'admin'.
-    # Apenas para fins de demonstração, vamos apenas checar o login.
-    if 'cliente_id' not in session:
-        flash('Acesso negado. Faça login.', 'danger')
-        return redirect(url_for('main.login'))
-    
-    # *** REQUISITO DE ADMIN AQUI:
-    # admin = Cliente.query.get(session['cliente_id'])
-    # if admin.nivel_acesso != 'admin': 
-    #     flash('Acesso restrito a administradores.', 'danger')
-    #     return redirect(url_for('main.index'))
-    # *** FIM DO REQUISITO DE ADMIN
+    # Verificar se é admin
+    if 'admin_id' not in session or not session.get('is_admin'):
+        flash('Acesso restrito a administradores.', 'danger')
+        return redirect(url_for('main.admin_login'))
 
     cliente_alvo = Cliente.query.get_or_404(cliente_id)
     novo_nivel = request.form.get('novo_nivel')
@@ -356,7 +338,6 @@ def alterar_nivel_acesso(cliente_id):
     niveis_validos = ['basico', 'intermediario', 'avancado']
 
     if novo_nivel and novo_nivel in niveis_validos:
-        
         # Altera o nível do cliente no banco de dados
         cliente_alvo.nivel_acesso = novo_nivel
         db.session.commit()
@@ -366,4 +347,219 @@ def alterar_nivel_acesso(cliente_id):
         flash('Nível de acesso inválido.', 'danger')
     
     # Redireciona de volta para a lista de clientes ou para onde você precisar
+    return redirect(url_for('main.listar_clientes'))
+
+
+# ######################################################################
+# NOVAS ROTAS ADICIONADAS
+# ######################################################################
+
+# Rota para visualizar relatórios recentes
+@main_bp.route('/relatorios_recentes')
+def relatorios_recentes():
+    if 'cliente_id' not in session:
+        flash('Você precisa estar logado para acessar esta página.', 'warning')
+        return redirect(url_for('main.login'))
+    
+    cliente = Cliente.query.get(session['cliente_id'])
+    
+    # Buscar todos os relatórios do cliente dos últimos 30 dias
+    from datetime import datetime, timedelta
+    data_limite = datetime.utcnow() - timedelta(days=30)
+    
+    # Combinar todos os tipos de relatórios
+    relatorios = []
+    
+    # Relatórios Básicos
+    basicos = RelatorioBasico.query.filter(
+        RelatorioBasico.cliente_id == cliente.id,
+        RelatorioBasico.data_criacao >= data_limite
+    ).all()
+    for rel in basicos:
+        relatorios.append({
+            'id': rel.id,
+            'tipo': 'basico',
+            'data_criacao': rel.data_criacao,
+            'alvo': None  # Adicionar se tiver campo alvo
+        })
+    
+    # Relatórios Intermediários
+    intermediarios = RelatorioIntermediario.query.filter(
+        RelatorioIntermediario.cliente_id == cliente.id,
+        RelatorioIntermediario.data_criacao >= data_limite
+    ).all()
+    for rel in intermediarios:
+        relatorios.append({
+            'id': rel.id,
+            'tipo': 'intermediario',
+            'data_criacao': rel.data_criacao,
+            'alvo': None
+        })
+    
+    # Relatórios Avançados
+    avancados = RelatorioAvancado.query.filter(
+        RelatorioAvancado.cliente_id == cliente.id,
+        RelatorioAvancado.data_criacao >= data_limite
+    ).all()
+    for rel in avancados:
+        relatorios.append({
+            'id': rel.id,
+            'tipo': 'avancado',
+            'data_criacao': rel.data_criacao,
+            'alvo': None
+        })
+    
+    # Ordenar por data (mais recentes primeiro)
+    relatorios.sort(key=lambda x: x['data_criacao'], reverse=True)
+    
+    return render_template('relatorios_recentes.html', relatorios=relatorios)
+
+
+# Rota para visualizar um relatório específico
+@main_bp.route('/visualizar_relatorio/<int:relatorio_id>/<tipo>')
+def visualizar_relatorio(relatorio_id, tipo):
+    if 'cliente_id' not in session:
+        flash('Você precisa estar logado para acessar esta página.', 'warning')
+        return redirect(url_for('main.login'))
+    
+    cliente = Cliente.query.get(session['cliente_id'])
+    
+    # Buscar o relatório correto baseado no tipo
+    if tipo == 'basico':
+        relatorio = RelatorioBasico.query.get_or_404(relatorio_id)
+    elif tipo == 'intermediario':
+        relatorio = RelatorioIntermediario.query.get_or_404(relatorio_id)
+    elif tipo == 'avancado':
+        relatorio = RelatorioAvancado.query.get_or_404(relatorio_id)
+    else:
+        flash('Tipo de relatório inválido.', 'danger')
+        return redirect(url_for('main.relatorios_recentes'))
+    
+    # Verificar se o relatório pertence ao cliente
+    if relatorio.cliente_id != cliente.id:
+        flash('Você não tem permissão para visualizar este relatório.', 'danger')
+        return redirect(url_for('main.relatorios_recentes'))
+    
+    return render_template('visualizar_relatorio.html', relatorio=relatorio, tipo=tipo)
+
+
+# Rota para minha conta
+@main_bp.route('/minha_conta')
+def minha_conta():
+    if 'cliente_id' not in session:
+        flash('Você precisa estar logado para acessar esta página.', 'warning')
+        return redirect(url_for('main.login'))
+    
+    cliente = Cliente.query.get(session['cliente_id'])
+    
+    # Contar relatórios por tipo
+    total_basico = RelatorioBasico.query.filter_by(cliente_id=cliente.id).count()
+    total_intermediario = RelatorioIntermediario.query.filter_by(cliente_id=cliente.id).count()
+    total_avancado = RelatorioAvancado.query.filter_by(cliente_id=cliente.id).count()
+    
+    return render_template('minha_conta.html', 
+                         cliente=cliente,
+                         total_basico=total_basico,
+                         total_intermediario=total_intermediario,
+                         total_avancado=total_avancado)
+
+
+# Rota de logout
+@main_bp.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    flash('Você saiu da sua conta.', 'success')
+    return redirect(url_for('main.index'))
+
+
+# Rota para termos de uso
+@main_bp.route('/termos')
+def termos():
+    return render_template('termos_styled.html')
+
+
+# ######################################################################
+# ROTAS DE ADMINISTRADOR
+# ######################################################################
+
+from .models import Administrador
+
+# Rota de login do admin
+@main_bp.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'GET':
+        return render_template('admin_login.html')
+    
+    # POST - processar login
+    email = request.form.get('admin_email')
+    senha = request.form.get('admin_senha')
+    
+    admin = Administrador.query.filter_by(admin_email=email).first()
+    
+    if not admin:
+        flash('E-mail ou senha inválidos.', 'danger')
+        return redirect(url_for('main.admin_login'))
+    
+    if check_password_hash(admin.admin_senha, senha):
+        session['admin_id'] = admin.id
+        session['is_admin'] = True
+        flash('Login de administrador realizado com sucesso!', 'success')
+        return redirect(url_for('main.admin_dashboard'))
+    else:
+        flash('E-mail ou senha inválidos.', 'danger')
+        return redirect(url_for('main.admin_login'))
+
+
+# Rota para entrar como admin (alternativa)
+@main_bp.route('/admin/entrar', methods=['POST'])
+def admin_entrar():
+    email = request.form.get('admin_email')
+    senha = request.form.get('admin_senha')
+    
+    admin = Administrador.query.filter_by(admin_email=email).first()
+    
+    if not admin:
+        flash('E-mail ou senha inválidos.', 'danger')
+        return redirect(url_for('main.admin_login'))
+    
+    if check_password_hash(admin.admin_senha, senha):
+        session['admin_id'] = admin.id
+        session['is_admin'] = True
+        flash('Login de administrador realizado com sucesso!', 'success')
+        return redirect(url_for('main.admin_dashboard'))
+    else:
+        flash('E-mail ou senha inválidos.', 'danger')
+        return redirect(url_for('main.admin_login'))
+
+
+# Dashboard do admin
+@main_bp.route('/admin/dashboard')
+def admin_dashboard():
+    # Verificar se é admin
+    if 'admin_id' not in session or not session.get('is_admin'):
+        flash('Acesso restrito a administradores.', 'danger')
+        return redirect(url_for('main.admin_login'))
+    
+    # Redirecionar para listar_clientes que já mostra tudo
+    return redirect(url_for('main.listar_clientes'))
+
+
+# Atualizar rota listar_clientes para usar template correto
+@main_bp.route('/listar_clientes')
+def listar_clientes():
+    # Verificar se é admin
+    if 'admin_id' not in session or not session.get('is_admin'):
+        flash('Acesso restrito a administradores.', 'danger')
+        return redirect(url_for('main.admin_login'))
+    
+    clientes = Cliente.query.all()
+    return render_template('admin_dashboard.html', clientes=clientes)
+
+
+# Logout do admin
+@main_bp.route('/admin/logout')
+def admin_logout():
+    session.clear()
+    flash('Você saiu da área administrativa.', 'success')
+    return redirect(url_for('main.index'))
     return redirect(url_for('main.listar_clientes'))
