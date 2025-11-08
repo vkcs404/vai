@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Escolha seu Relatório - Vai</title>
+</head>
+<body>
+    <!-- NavBar -->
+    <div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Entrar</a>
+            <a href="/cadastro">Cadastrar</a>
+        </nav>
+    </div>
+
+    <div class="relatorios-container">
+        <h1>Escolha o Relatório Ideal para Você</h1>
+        <p class="subtitulo">Todos os relatórios analisam portas abertas e vulnerabilidades de cabeçalhos HTTP</p>
+
+        <div class="relatorios-grid">
+            <!-- Relatório Básico -->
+            <div class="relatorio-card">
+                <div class="relatorio-header">
+                    <h2>Relatório Básico</h2>
+                    <div class="preco">R$ 10,00</div>
+                </div>
+                <div class="relatorio-body">
+                    <p class="descricao">
+                        Indicado para pessoas com pouco conhecimento técnico em cibersegurança que desejam verificar se o site da empresa está seguro.
+                    </p>
+                    <ul class="caracteristicas">
+                        <li>Linguagem simples e acessível</li>
+                        <li>Análise básica de portas abertas</li>
+                        <li>Verificação de cabeçalhos HTTP</li>
+                        <li>Relatório fácil de entender</li>
+                    </ul>
+                </div>
+                <div class="relatorio-footer">
+                    <form action="/selecionar_relatorio" method="POST">
+                        <input type="hidden" name="tipo_relatorio" value="basico">
+                        <button type="submit" class="btn-selecionar">Selecionar</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Relatório Intermediário -->
+            <div class="relatorio-card destaque">
+                <div class="badge-popular">Mais Popular</div>
+                <div class="relatorio-header">
+                    <h2>Relatório Intermediário</h2>
+                    <div class="preco">R$ 15,00</div>
+                </div>
+                <div class="relatorio-body">
+                    <p class="descricao">
+                        Ideal para desenvolvedores que querem garantir que seus sites estejam protegidos, com um relatório que aponta falhas de segurança que devem ser mitigadas.
+                    </p>
+                    <ul class="caracteristicas">
+                        <li>Linguagem técnica moderada</li>
+                        <li>Análise detalhada de portas</li>
+                        <li>Verificação avançada de cabeçalhos</li>
+                        <li>Identificação de falhas de segurança</li>
+                        <li>Recomendações de mitigação</li>
+                    </ul>
+                </div>
+                <div class="relatorio-footer">
+                    <form action="/selecionar_relatorio" method="POST">
+                        <input type="hidden" name="tipo_relatorio" value="intermediario">
+                        <button type="submit" class="btn-selecionar">Selecionar</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Relatório Avançado -->
+            <div class="relatorio-card">
+                <div class="relatorio-header">
+                    <h2>Relatório Avançado</h2>
+                    <div class="preco">R$ 20,00</div>
+                </div>
+                <div class="relatorio-body">
+                    <p class="descricao">
+                        Voltado para usuários mais experientes que desejam automatizar a detecção de falhas de segurança e receber um relatório detalhado sobre a segurança do site.
+                    </p>
+                    <ul class="caracteristicas">
+                        <li>Linguagem técnica avançada</li>
+                        <li>Análise completa e profunda</li>
+                        <li>Varredura automatizada</li>
+                        <li>Relatório técnico detalhado</li>
+                        <li>Análise de vulnerabilidades complexas</li>
+                        <li>Recomendações técnicas específicas</li>
+                    </ul>
+                </div>
+                <div class="relatorio-footer">
+                    <form action="/selecionar_relatorio" method="POST">
+                        <input type="hidden" name="tipo_relatorio" value="avancado">
+                        <button type="submit" class="btn-selecionar">Selecionar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
