@@ -1,3 +1,4 @@
+#É o arquivo que você executa para iniciar o servidor.
 from app import create_app, db
 from app.models import Cliente 
 

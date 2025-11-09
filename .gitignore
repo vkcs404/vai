@@ -9,3 +9,25 @@ instance/
 # Outros arquivos comuns a serem ignorados (opcional, mas recomendado)
 
 scr/projeto/instance/
+
+#nao mexer: init, 
+#mexer: 
+
+
+#Desafio Hipotético: "Quero que vocês criem uma nova rota /admin/relatorios/basicos que liste todos os relatórios básicos já criados, de todos os clientes, e mostre o nome do cliente que o gerou."
+#@main_bp.route('/admin/relatorios/basicos')
+#def admin_relatorios_basicos():
+#    if 'admin_id' not in session or not session.get('is_admin'):
+#        flash('Acesso restrito a administradores.', 'danger')
+#        return redirect(url_for('main.admin_login'))
+
+#1. FAZ A CONSULTA: Pega todos os relatórios básicos.
+#Usa .all() para buscar todos. O 'cliente' vem do backref no models.py!
+#    todos_relatorios = RelatorioBasico.query.all() 
+
+# 2. RENDERIZA UM NOVO/EXISTENTE TEMPLATE
+# Usaria um template como 'admin_relatorios.html'
+#    return render_template('admin_relatorios.html', relatorios=todos_relatorios, tipo_relatorio='Básico')
+
+
+#Criar ou Usar um Template HTML (ex: admin_relatorios.html) para iterar sobre a lista relatorios e exibir os dados (ID do relatório, data, nome do cliente).

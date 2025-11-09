@@ -1,3 +1,5 @@
+#Script auxiliar para tarefas de manutenção, provavelmente para criar o primeiro usuário administrador no banco de dados (meuapp.db), essencial para acessar o admin_dashboard.html.
+
 #!/usr/bin/env python
 """
 Script to create a default admin user in the database

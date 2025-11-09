@@ -10,7 +10,7 @@
     <div>
         <nav>
             <a href="/">Home</a>
-            <a href="/scaner">Scanner</a>
+       <!--    <a href="/scaner">Scanner</a> -->
             <a href="/minha_conta">Minha Conta</a>
             <a href="{{ url_for('main.relatorios_recentes') }}">Voltar para Lista</a>
         </nav>
@@ -18,10 +18,10 @@
 
     <div class="card-conteudo"> <h1>Detalhes do Relatório {{ tipo.title() }}</h1>
         
-        <a href="{{ url_for('main.download_relatorio', relatorio_id=relatorio.id, tipo=tipo) }}" 
+    <!--    <a href="{{ url_for('main.download_relatorio', relatorio_id=relatorio.id, tipo=tipo) }}" 
         class="btn-submit" style="width: auto; padding: 1rem 2rem;">
         Baixar PDF
-        </a>
+        </a>  -->
 
         <div class="conteudo-tecnico">
             <pre>{{ relatorio.conteudo }}</pre>
