@@ -23,7 +23,7 @@
         <div class="cadastro-card">
             <h2>Login do Administrador</h2>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
+<!--            {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
                         <div style="background: {% if category == 'success' %}rgba(16, 185, 129, 0.2){% elif category == 'danger' %}rgba(255, 0, 64, 0.2){% else %}rgba(0, 212, 255, 0.2){% endif %}; border: 2px solid {% if category == 'success' %}#10b981{% elif category == 'danger' %}#ff0040{% else %}#00d4ff{% endif %}; border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; color: #ffffff; text-align: center;">
@@ -31,7 +31,7 @@
                         </div>
                     {% endfor %}
                 {% endif %}
-            {% endwith %}
+            {% endwith %} -->
 
             <form method="POST" action="{{ url_for('main.admin_entrar') }}">
                 <div>
