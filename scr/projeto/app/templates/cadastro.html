@@ -5,9 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar no Vai - Consentimento LGPD</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e; 
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            width: 900px;
+            max-height: 90vh;
+            overflow-y: auto; 
+        }
+
+        .modal-footer {
+            padding: 20px;
+            margin-top: 30px;
+            background-color: #2a2a2a; 
+            border-top: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            max-width: 800px;
+            line-height: 1.4;
+            color: #ffffff;
+        }
+
+        .checkbox-container input {
+            margin-right: 15px;
+            min-width: 20px;
+            min-height: 20px;
+            cursor: pointer;
+            accent-color: #00d4ff; 
+        }
+
+        .btn-confirm {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, opacity 0.3s;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 300px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: #fff;
+        }
+
+        .btn-confirm:disabled {
+            background: #555;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-cancel {
+            background-color: #444;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        /* Adicionado para permitir a rolagem do texto dos termos */
+        .cadastro-container.terms-scroll {
+            max-height: calc(90vh - 150px); /* Ajuste a altura para caber na tela */
+            overflow-y: auto;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <!-- NavBar -->
     <div>
         <nav>
             <a href="/">Home</a>
@@ -16,7 +106,6 @@
         </nav>
     </div>
 
-    <!-- Cadastro Container -->
     <div class="cadastro-container">
         <h1>Área de Cadastro</h1>
         
@@ -47,70 +136,170 @@
         </div>
     </div>
 
-    <!-- Modal de Termos LGPD -->
     <div id="lgpd-modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3>Termos de Uso e LGPD (Lei nº 13.709/2018)</h3>
-            </div>
+            
+            <div class="cadastro-container terms-scroll" id="termsContent"> 
+                <h1>Termos de Uso e LGPD</h1>
+                
+                <div class="cadastro-card" style="max-width: 900px; text-align: left;">
+                    <p class="terms-date" style="color: #00d4ff; font-weight: 600; margin-bottom: 1.5rem;">
+                        Última atualização: 04/10/2024
+                    </p>
 
-            <div id="termsContent" class="modal-body">
-                <p class="terms-date">Última atualização: 04/10/2024</p>
+                    <p style="margin-bottom: 1rem; color: #e0e0e0; line-height: 1.7;">
+                        Bem-vindo(a) ao VAI, um serviço online que realiza varreduras técnicas (scans) em domínios e servidores autorizados, com o objetivo de identificar portas abertas, vulnerabilidades em cabeçalhos HTTP e outras falhas de configuração de segurança.
+                    </p>
 
-                <p>Bem-vindo(a) ao VAI, um serviço online que realiza varreduras técnicas (scans) em domínios e servidores autorizados, com o objetivo de identificar portas abertas, vulnerabilidades em cabeçalhos HTTP e outras falhas de configuração de segurança.</p>
+                    <p class="terms-important" style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 10px; border-left: 4px solid #00d4ff; margin: 1.5rem 0; font-weight: 600;">
+                        Antes de utilizar o serviço, leia atentamente estes Termos de Uso. Ao marcar a caixa de aceite, você declara que compreende e concorda integralmente com as condições abaixo.
+                    </p>
 
-                <p class="terms-important">Antes de utilizar o serviço, leia atentamente estes Termos de Uso. Ao marcar a caixa de aceite, você declara que compreende e concorda integralmente com as condições abaixo.</p>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        1. Finalidade do Serviço
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        O VAI destina-se exclusivamente à realização de análises de segurança autorizadas em sites, servidores e domínios de titularidade do usuário.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        O serviço tem caráter diagnóstico e educativo, fornecendo relatórios técnicos e sugestões de correção com base em boas práticas de segurança.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        O relatório gerado ficará disponível por 30 dias no painel do usuário.
+                    </p>
 
-                <h4>1. Finalidade do Serviço</h4>
-                <p>O VAI destina-se exclusivamente à realização de análises de segurança autorizadas em sites, servidores e domínios de titularidade do usuário.</p>
-                <p>O serviço tem caráter diagnóstico e educativo, fornecendo relatórios técnicos e sugestões de correção com base em boas práticas de segurança.</p>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        2. Autorização e Responsabilidade do Usuário
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">2.1. O usuário declara e garante que:</p>
+                    <ul style="list-style: none; padding-left: 1.5rem; margin: 1rem 0;">
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            É o titular legítimo do domínio ou servidor a ser escaneado; ou
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Possui autorização formal do titular para realizar o teste de segurança.
+                        </li>
+                    </ul>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        2.2. O usuário é integralmente responsável pelas URLs, domínios e endereços IP inseridos no sistema.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        2.3. O usuário reconhece que o envio de um domínio sem a devida autorização pode configurar acesso indevido ou atividade ilícita conforme a legislação brasileira (art. 154-A do Código Penal e Lei nº 12.965/2014 – Marco Civil da Internet).
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        2.4. O VAI não se responsabiliza por varreduras realizadas em alvos não autorizados informados pelo usuário.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        2.5. Em caso de denúncia, ordem judicial ou solicitação de autoridade competente, os registros de autorização e logs de uso poderão ser compartilhados, conforme previsto na legislação vigente.
+                    </p>
 
-                <h4>2. Autorização e Responsabilidade do Usuário</h4>
-                <p>2.1. O usuário declara e garante que:</p>
-                <ul>
-                    <li>É o titular legítimo do domínio ou servidor a ser escaneado; ou</li>
-                    <li>Possui autorização formal do titular para realizar o teste de segurança.</li>
-                </ul>
-                <p>2.2. O usuário é integralmente responsável pelas URLs, domínios e endereços IP inseridos no sistema.</p>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        3. Escopo Técnico e Limitações
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">3.1. O scanner realiza verificações não intrusivas, limitadas a:</p>
+                    <ul style="list-style: none; padding-left: 1.5rem; margin: 1rem 0;">
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Identificação de portas abertas;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Análise de cabeçalhos HTTP;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Geração de relatório técnico com recomendações.
+                        </li>
+                    </ul>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        3.2. O sistema não executa exploits, não altera dados, não realiza ataques de negação de serviço (DoS) e não coleta informações privadas de usuários finais.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        3.3. O uso indevido do serviço para exploração, invasão, ou coleta não autorizada de dados é estritamente proibido e poderá resultar em bloqueio imediato da conta, cancelamento do acesso e comunicação às autoridades competentes.
+                    </p>
 
-                <h4>3. Escopo Técnico e Limitações</h4>
-                <p>3.1. O scanner realiza verificações não intrusivas, limitadas a:</p>
-                <ul>
-                    <li>Identificação de portas abertas;</li>
-                    <li>Análise de cabeçalhos HTTP;</li>
-                    <li>Geração de relatório técnico com recomendações.</li>
-                </ul>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        4. Privacidade e Proteção de Dados (LGPD)
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        4.1. O tratamento de dados pessoais pelo VAI segue os princípios e regras da Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        4.2. As informações coletadas (Nome, Email, Senha) são utilizadas exclusivamente para:
+                    </p>
+                    <ul style="list-style: none; padding-left: 1.5rem; margin: 1rem 0;">
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Execução do contrato de prestação de serviço;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Cumprimento de obrigações legais e regulatórias;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Segurança e prevenção a fraudes.
+                        </li>
+                    </ul>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        4.3. Em caso de incidente de segurança que envolva dados pessoais, o VAI compromete-se a comunicar a Autoridade Nacional de Proteção de Dados (ANPD) e os titulares afetados, conforme o regulamento vigente.
+                    </p>
 
-                <h4>4. Privacidade e Proteção de Dados (LGPD)</h4>
-                <p>4.1. O tratamento de dados pessoais pelo VAI segue os princípios e regras da Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
-                <p>4.2. As informações coletadas (Nome, Email, Senha) são utilizadas exclusivamente para:</p>
-                <ul>
-                    <li>Execução do contrato de prestação de serviço;</li>
-                    <li>Cumprimento de obrigações legais e regulatórias;</li>
-                    <li>Segurança e prevenção a fraudes.</li>
-                </ul>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        5. Pagamentos e Entrega de Relatórios
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        5.1. O serviço é prestado mediante pagamento conforme plano selecionado.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        5.2. Após a confirmação do pagamento, o relatório será disponibilizado no painel do usuário.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        5.3. Não serão reembolsados valores.
+                    </p>
 
-                <h4>5. Pagamentos e Entrega de Relatórios</h4>
-                <p>5.1. O serviço é prestado mediante pagamento conforme plano selecionado.</p>
-                <p>5.2. Após a confirmação do pagamento, o relatório será disponibilizado no painel do usuário.</p>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        6. Proibições Específicas
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">O usuário não pode:</p>
+                    <ul style="list-style: none; padding-left: 1.5rem; margin: 1rem 0;">
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Inserir domínios de terceiros sem autorização;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Utilizar o sistema para ataques ou exploração de vulnerabilidades;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Redistribuir ou revender os relatórios sem autorização;
+                        </li>
+                        <li style="position: relative; margin-bottom: 0.5rem; padding-left: 1.5rem; color: #d0d0d0;">
+                            <span style="position: absolute; left: 0; color: #00d4ff; font-weight: bold;">✓</span>
+                            Tentar burlar limitações técnicas, como limites de requisições ou autenticação.
+                        </li>
+                    </ul>
 
-                <h4>6. Proibições Específicas</h4>
-                <p>O usuário não pode:</p>
-                <ul>
-                    <li>Inserir domínios de terceiros sem autorização;</li>
-                    <li>Utilizar o sistema para ataques ou exploração de vulnerabilidades;</li>
-                    <li>Redistribuir ou revender os relatórios sem autorização.</li>
-                </ul>
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        7. Responsabilidade e Isenção
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        7.1. O VAI fornece os relatórios "no estado em que se encontram", sem garantia absoluta de exatidão ou completude, já que vulnerabilidades podem variar conforme tempo, ambiente e infraestrutura do alvo.
+                    </p>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        7.2. O sistema não se responsabiliza por prejuízos diretos ou indiretos decorrentes do uso ou interpretação dos relatórios.
+                    </p>
 
-                <h4>7. Responsabilidade e Isenção</h4>
-                <p>7.1. O VAI fornece os relatórios "no estado em que se encontram", sem garantia absoluta de exatidão.</p>
-                <p>7.2. O sistema não se responsabiliza por prejuízos diretos ou indiretos decorrentes do uso dos relatórios.</p>
-
-                <h4>8. Disposições Finais</h4>
-                <p>8.1. Estes Termos podem ser atualizados periodicamente. A versão vigente estará sempre disponível no site.</p>
-            </div>
-
-            <div class="modal-footer">
+                    <h4 style="color: #00d4ff; font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;">
+                        8. Disposições Finais
+                    </h4>
+                    <p style="margin-bottom: 1rem; color: #d0d0d0;">
+                        8.1. Estes Termos podem ser atualizados periodicamente. A versão vigente estará sempre disponível no site.
+                    </p>
+                </div> </div> <div class="modal-footer">
                 <div class="checkbox-container">
                     <input type="checkbox" id="lgpdConsent">
                     <label for="lgpdConsent">
@@ -125,8 +314,15 @@
                     Cancelar
                 </button>
             </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="/cadastro" style="display: inline-block; background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%); color: #ffffff; text-decoration: none; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
+                    Voltar ao Cadastro
+                </a>
+            </div>
         </div>
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -138,34 +334,45 @@
             const cancelConsentButton = document.getElementById('cancelConsentButton');
             const termsContent = document.getElementById('termsContent');
 
-            // Abrir Modal
+            // 1. Abrir Modal
             openModalButton.addEventListener('click', (event) => {
                 event.preventDefault();
+
+                // Garante que os campos do formulário principal estão preenchidos antes de abrir o modal
+                if (!form.reportValidity()) {
+                    return; 
+                }
+
                 modalOverlay.style.display = 'flex';
-                termsContent.scrollTop = 0; 
-            });
-
-            // Controlar botão pelo checkbox
-            lgpdConsent.addEventListener('change', () => {
-                confirmConsentButton.disabled = !lgpdConsent.checked;
-            });
-
-            // Confirmar e submeter
-            confirmConsentButton.addEventListener('click', () => {
-                if (lgpdConsent.checked) {
-                    modalOverlay.style.display = 'none';
-                    form.submit();
+                // Garante que o conteúdo dos termos comece do topo
+                if(termsContent) {
+                    termsContent.scrollTop = 0; 
                 }
             });
 
-            // Cancelar
+            // 2. Controlar botão pelo checkbox
+            lgpdConsent.addEventListener('change', () => {
+                // Habilita/Desabilita o botão 'Aceitar e Cadastrar'
+                confirmConsentButton.disabled = !lgpdConsent.checked;
+            });
+
+            // 3. Confirmar e submeter
+            confirmConsentButton.addEventListener('click', () => {
+                if (lgpdConsent.checked) {
+                    modalOverlay.style.display = 'none';
+                    // Submete o formulário principal
+                    form.submit(); 
+                }
+            });
+
+            // 4. Cancelar
             cancelConsentButton.addEventListener('click', () => {
                 modalOverlay.style.display = 'none';
                 lgpdConsent.checked = false;
                 lgpdConsent.dispatchEvent(new Event('change'));
             });
 
-            // Fechar clicando fora
+            // 5. Fechar clicando fora
             modalOverlay.addEventListener('click', (event) => {
                 if (event.target === modalOverlay) {
                     modalOverlay.style.display = 'none';
