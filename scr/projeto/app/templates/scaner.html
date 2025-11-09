@@ -53,12 +53,14 @@
                 </div>
 
                 <div class="scanner-buttons">
+                    {% if cliente.nivel_acesso == 'basico' %}
                     <button type="submit" class="btn-scanner btn-basico"
                         data-url="{{ url_for('main.executar_scanner_basico') }}">
                         Iniciar Scan Básico
                     </button>
+                    {% endif %}
 
-                    {% if cliente.nivel_acesso in ['intermediario', 'avancado'] %}
+                    {% if cliente.nivel_acesso == 'intermediario' %}
                     <button type="submit" class="btn-scanner btn-intermediario"
                         data-url="{{ url_for('main.executar_scanner_intermediario') }}">
                         Iniciar Scan Intermediário
