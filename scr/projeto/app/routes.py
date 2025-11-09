@@ -84,18 +84,50 @@ def pagamento(): # Função que lida com a exibição da página de pagamento.
 
 @main_bp.route('/confirmar_pagamento', methods=['POST']) # Rota para confirmar o pagamento (simulação, via POST).
 def confirmar_pagamento(): # Função que simula a confirmação do pagamento.
-    # Mark payment as confirmed in session
-    session['pagamento_confirmado'] = True # Define a flag na sessão indicando que o pagamento foi confirmado.
     
-    # Remove a flag de login após seleção, pois o pagamento será finalizado.
-    if 'login_apos_selecao' in session:
-        session.pop('login_apos_selecao')
+    if 'cliente_id' not in session:
+        flash('Sessão expirada. Faça login para confirmar o pagamento.', 'danger')
+        return redirect(url_for('main.login'))
 
-    flash('Pagamento confirmado com sucesso!', 'success') # Mensagem de sucesso.
-    return redirect(url_for('main.scaner')) # Redireciona para a página do scanner, onde o cliente pode usar o serviço.
+    cliente_id = session['cliente_id']
+    tipo_relatorio_comprado = session.get('tipo_relatorio') # 'basico', 'intermediario', ou 'avancado'
 
+    if not tipo_relatorio_comprado:
+        flash('Não foi possível identificar o relatório. Tente selecioná-lo novamente.', 'warning')
+        return redirect(url_for('main.escolher_relatorio'))
 
-# ... (outras rotas simples) ...
+    # --- ETAPA 2: ATUALIZAR O BANCO DE DADOS (A CORREÇÃO) ---
+    try:
+        # Busca o cliente que está logado
+        cliente = Cliente.query.get(cliente_id)
+        if not cliente:
+            flash('Erro ao encontrar seu usuário. Faça login novamente.', 'danger')
+            session.clear()
+            return redirect(url_for('main.login'))
+        
+        # ATUALIZA O NÍVEL DE ACESSO DELE NO BANCO DE DADOS
+        cliente.nivel_acesso = tipo_relatorio_comprado
+        
+        # Salva a alteração no banco
+        db.session.commit() 
+
+        # --- ETAPA 3: LIMPAR A SESSÃO E REDIRECIONAR ---
+        session['pagamento_confirmado'] = True
+        
+        # Limpa as flags de compra da sessão, pois já foram processadas
+        session.pop('login_apos_selecao', None)
+        session.pop('tipo_relatorio', None)
+        session.pop('preco_relatorio', None)
+        session.pop('descricao_relatorio', None)
+
+        flash(f'Pagamento confirmado! Seu acesso foi atualizado para {tipo_relatorio_comprado.title()}.', 'success')
+        return redirect(url_for('main.scaner')) # Redireciona para a página do scanner
+
+    except Exception as e:
+        db.session.rollback() # Desfaz a tentativa de mudança se der erro
+        print(f"ERRO AO CONFIRMAR PAGAMENTO E ATUALIZAR NÍVEL: {e}") # Log do erro no terminal
+        flash('Ocorreu um erro ao processar seu pagamento. Tente novamente.', 'danger')
+        return redirect(url_for('main.pagamento'))
 
 # Rota do cliente novo (nenhuma mudança necessária aqui, o status 'ativo' será definido por padrão)
 @main_bp.route('/cliente_novo', methods=['GET' ,'POST']) # Rota para cadastrar um novo cliente. Permite GET (mostrar formulário) e POST (enviar dados).
