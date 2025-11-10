@@ -144,10 +144,14 @@ def cliente_novo(): # Função que lida com o cadastro.
         
         senha_criptografada = generate_password_hash(senha, method='pbkdf2:sha256') # Criptografa a senha usando um algoritmo forte (pbkdf2:sha256).
 
+        # Novo campo 'nome_bia' vindo do formulário de cadastro
+        nome_bia = request.form.get('nome_bia') or nome
+
         novo_cliente = Cliente( # Cria um novo objeto Cliente.
             cliente_nome=nome, # Atribui o nome.
             cliente_email=email, # Atribui o email.
-            cliente_senha=senha_criptografada # Atribui a senha criptografada.
+            cliente_senha=senha_criptografada,
+            nome_bia=nome_bia, # Atribui a Bia a partir do formulário (ou usa o nome como fallback).
             # O campo 'cliente_status' será 'ativo' por padrão, conforme definido no models.py
         )
 

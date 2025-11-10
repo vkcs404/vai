@@ -12,6 +12,7 @@ class Cliente(db.Model):
     cliente_nome = db.Column(db.String(80), nullable=False)  # Define a coluna nome do cliente
     cliente_email = db.Column(db.String(320), unique=True, nullable=False)  # Armazena o e-mail, deve ser único e é obrigatório (usado para login).
     cliente_senha = db.Column(db.String(128), nullable=False)  # Armazena o hash da senha
+    nome_bia = db.Column(db.String(80), nullable=False) 
     cliente_status = db.Column(db.String(10), nullable=False, default='ativo')
     nivel_acesso = db.Column(db.String(20), nullable=False, default='basico') #1 cliente só pode ter 1 nível
     relatorios_basicos = db.relationship('RelatorioBasico', backref='cliente', lazy=True, cascade="all, delete-orphan")  # # Define a relação "Um para Muitos" com RelatorioBasico. 'backref' permite acessar o cliente a partir do relatório, e 'cascade' garante que relatórios sejam excluídos ao deletar o cliente.
